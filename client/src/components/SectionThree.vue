@@ -1,0 +1,37 @@
+<template>
+  <div class="px-4 section2--wrapper lg:px-0">
+    <div
+      class="flex flex-col justify-center lg:space-x-16 lg:flex-row wrapper_container"
+    >
+      <div class="mx-auto text-center mt-28 container-heading">
+        <img
+          src="/img/section3.png"
+          class="w-[583px] h-[370px]"
+          alt=""
+          srcset=""
+        />
+      </div>
+      <div
+        class="flex flex-col items-start justify-center mt-8 text-center lg:mt-0 container-card"
+      >
+        <h1
+          class="mb-4 text-xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-5xl"
+        >
+          Achieve your target and won your life
+        </h1>
+        <div class="mx-auto text-center lg:mt-5">
+          <button
+            href="#"
+            class="inline-flex justify-center items-center py-3 w-[157px] px-5 text-base font-medium text-center text-white rounded-[20px] bg-secondaryColor"
+          >
+            Get Started
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup></script>
+
+<style lang="scss" scoped></style>
