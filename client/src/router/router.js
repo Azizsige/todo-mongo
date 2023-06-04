@@ -90,4 +90,9 @@ router.beforeEach((to, from, next) => {
   next();
 });
 
+router.afterEach((to) => {
+  // Mengubah judul head saat rute berubah
+  document.title = to.meta.title || "Nama Default";
+});
+
 export default router;
