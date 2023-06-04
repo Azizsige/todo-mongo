@@ -12,12 +12,12 @@
                 {{ title }}
               </h1>
               <div class="text-center">
-                <a
-                  href="#"
+                <router-link
+                  to="/login"
                   class="inline-flex justify-center items-center py-3 w-auto lg:w-[157px] px-5 text-base font-medium text-center text-white rounded-[20px] bg-secondaryColor"
                 >
                   {{ buttonText }}
-                </a>
+                </router-link>
               </div>
             </div>
           </section>

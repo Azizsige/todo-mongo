@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import Home from "./../views/Home.vue";
 import Register from "./../views/Register.vue";
 import Login from "./../views/Login.vue";
+import Dashboard from "./../views/Dashboard.vue";
 import About from "../views/About.vue";
 import Contact from "../views/Contact.vue";
 import NotFound from "../views/NotFound.vue";
@@ -32,6 +33,14 @@ const routes = [
     component: Login,
     meta: {
       title: "Login | Todo App With Vue 3 and Mongodb",
+    },
+  },
+  {
+    path: "/dashboard",
+    name: "Dashboard",
+    component: Dashboard,
+    meta: {
+      title: "Dashboard | Todo App With Vue 3 and Mongodb",
     },
   },
   {
@@ -83,16 +92,19 @@ router.beforeEach((to, from, next) => {
     "Contact",
     "Register",
     "Login",
+    "Dashboard",
   ];
   if (!menuItems.includes(to.name)) {
     next({ name: "NotFound" });
   }
   next();
+  window.scrollTo(0, 0);
 });
 
 router.afterEach((to) => {
   // Mengubah judul head saat rute berubah
   document.title = to.meta.title || "Nama Default";
+  // scroll to top
 });
 
 export default router;

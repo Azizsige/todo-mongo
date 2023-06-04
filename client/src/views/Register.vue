@@ -3,7 +3,9 @@
     <div
       class="flex items-center justify-center h-screen mx-auto wrapper-container"
     >
-      <div class="container-card bg-white shadow-lg w-[512px] p-7">
+      <div
+        class="container-card bg-white shadow-lg w-[90%] lg:w-[512px] p-4 lg:p-7"
+      >
         <div
           class="flex items-center card-header text-[36px] text-secondaryColor font-light space-x-2 font-Rowdies"
         >

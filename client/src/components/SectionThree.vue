@@ -20,12 +20,12 @@
           Achieve your target and won your life
         </h1>
         <div class="mx-auto text-center lg:mt-5">
-          <button
-            href="#"
+          <router-link
+            to="/login"
             class="inline-flex justify-center items-center py-3 w-[157px] px-5 text-base font-medium text-center text-white rounded-[20px] bg-secondaryColor"
           >
             Get Started
-          </button>
+          </router-link>
         </div>
       </div>
     </div>
