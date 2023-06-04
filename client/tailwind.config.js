@@ -10,10 +10,12 @@ export default {
     extend: {
       fontFamily: {
         Rosario: ["Rosario", "sans-serif"],
+        Rowdies: ["Rowdies", "cursive"],
       },
       colors: {
         primaryColor: "#000000",
         secondaryColor: "#FF4F5A",
+        thirdColor: "#FAFAFA",
       },
     },
   },

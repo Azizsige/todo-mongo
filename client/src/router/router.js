@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Home from "./../views/Home.vue";
+import Register from "./../views/Register.vue";
+import Login from "./../views/Login.vue";
 import About from "../views/About.vue";
 import Contact from "../views/Contact.vue";
 import NotFound from "../views/NotFound.vue";
@@ -12,6 +14,25 @@ const routes = [
     path: "/",
     name: "Home",
     component: Home,
+    meta: {
+      title: "Home | Todo App With Vue 3 and Mongodb",
+    },
+  },
+  {
+    path: "/register",
+    name: "Register",
+    component: Register,
+    meta: {
+      title: "Register | Todo App With Vue 3 and Mongodb",
+    },
+  },
+  {
+    path: "/login",
+    name: "Login",
+    component: Login,
+    meta: {
+      title: "Login | Todo App With Vue 3 and Mongodb",
+    },
   },
   {
     path: "/service",
@@ -52,7 +73,17 @@ const router = createRouter({
 
 // if not found redirect to 404
 router.beforeEach((to, from, next) => {
-  const menuItems = ["Home", "Service", "Sales", "Webinar", "About", "Contact"];
+  document.title = to.meta.title;
+  const menuItems = [
+    "Home",
+    "Service",
+    "Sales",
+    "Webinar",
+    "About",
+    "Contact",
+    "Register",
+    "Login",
+  ];
   if (!menuItems.includes(to.name)) {
     next({ name: "NotFound" });
   }

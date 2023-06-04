@@ -1,5 +1,5 @@
 <template>
-  <div class="section2--wrapper">
+  <div v-motion-pop-visible :delay="200" class="section2--wrapper">
     <div class="lg:space-y-24 wrapper_container">
       <div class="text-center mt-28 container-heading">
         <h1

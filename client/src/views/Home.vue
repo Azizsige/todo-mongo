@@ -29,14 +29,14 @@ const menuItems = reactive([
     name: "Login",
     link: "/login",
     class:
-      "font-medium text-lg lg:text-[26px] text-gray-600 hover:text-secondaryColor",
+      "font-medium text- lg:text-[26px] text-gray-600 hover:text-secondaryColor",
   },
   {
     id: 2,
     name: "Register",
     link: "/register",
     class:
-      "font-medium text-lg lg:text-[26px] text-black hover:text-secondaryColor",
+      "font-medium text- lg:text-[26px] text-black hover:text-secondaryColor",
   },
 ]);
 </script>

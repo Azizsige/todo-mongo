@@ -1,11 +1,7 @@
 <template>
   <div>
     <!-- Jumbotron -->
-    <div
-      class="flex items-center w-full wrapper-jumbo"
-      v-motion-pop
-      :delay="200"
-    >
+    <div class="flex items-center w-full wrapper-jumbo" v-motion-pop>
       <div class="flex flex-col items-center px-4 mx-auto jumbo lg:px-0">
         <div class="mt-10 jumbo-text">
           <section class="mx-auto bg-white">

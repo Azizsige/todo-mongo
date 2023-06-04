@@ -8,4 +8,14 @@ import("preline");
 // vueuse motion
 import { MotionPlugin } from "@vueuse/motion";
 
-createApp(App).use(router).use(MotionPlugin).mount("#app");
+// fontawesome
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+library.add(faEye, faEyeSlash);
+
+createApp(App)
+  .use(router)
+  .use(MotionPlugin)
+  .component("font-awesome-icon", FontAwesomeIcon)
+  .mount("#app");
