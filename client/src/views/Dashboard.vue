@@ -1,6 +1,6 @@
 <template>
   <nav
-    class="fixed top-0 z-50 w-full bg-secondaryColor border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700"
+    class="fixed top-0 z-50 w-full border-b border-gray-200 bg-secondaryColor dark:bg-gray-800 dark:border-gray-700"
   >
     <div class="px-3 py-3 lg:px-5 lg:pl-3">
       <div class="flex items-center justify-between">
@@ -34,7 +34,7 @@
               alt="FlowBite Logo"
             />
             <span
-              class="self-center font-Rowdies text-xl sm:text-2xl whitespace-nowrap text-white"
+              class="self-center text-xl text-white font-Rowdies sm:text-2xl whitespace-nowrap"
               >Todo Daily</span
             >
           </router-link>
@@ -122,7 +122,7 @@
         <li>
           <a
             href="#"
-            class="flex items-center p-2 text-secondaryColor rounded-lg hover:bg-gray-100"
+            class="flex items-center p-2 rounded-lg text-secondaryColor hover:bg-gray-100"
           >
             <svg
               width="29"
@@ -283,9 +283,9 @@
         <h1 class="text-[48px] text-secondaryColor font-bold">Today</h1>
         <p class="text-[#414141] text-[18px]">4/6 completed</p>
       </div>
-      <div class="list-todo mt-10">
+      <div class="mt-10 list-todo">
         <form action="">
-          <div class="form-group flex items-center">
+          <div class="flex items-center form-group">
             <input type="checkbox" id="html" />
             <label for="html" class="flex items-center w-full">
               <div
@@ -302,7 +302,7 @@
                     </h5>
                   </div>
                 </div>
-                <div class="content--action flex space-x-3">
+                <div class="flex space-x-3 content--action">
                   <!-- Modal toggle -->
                   <button
                     data-modal-target="authentication-modal"
@@ -511,6 +511,21 @@
 </template>
 
 <script setup>
+import { onMounted } from "vue";
+import { useRouter } from "vue-router";
+
+import { useStore } from "./../stores/store.js";
+
+const router = useRouter();
+const store = useStore();
+
+onMounted(() => {
+  if (store.isUserLoggedIn) {
+    router.push("/dashboard");
+  } else {
+    router.push("/login");
+  }
+});
 // import { onMounted } from "vue";
 // import { initFlowbite } from "flowbite";
 

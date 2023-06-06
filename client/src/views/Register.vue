@@ -27,6 +27,7 @@
               <input
                 type="text"
                 id="text"
+                v-model="username"
                 class="bg-gray-50 border border-gray-300 text-black text-md rounded-lg focus:ring-secondaryColor focus:border-secondaryColor block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Your Username"
                 required
@@ -41,6 +42,7 @@
               <input
                 type="email"
                 id="email"
+                v-model="email"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-md rounded-lg focus:ring-secondaryColor focus:border-secondaryColor block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Your Email"
                 required
@@ -105,6 +107,7 @@
 
             <button
               type="submit"
+              @click.prevent="register"
               class="text-white bg-secondaryColor focus:ring-4 focus:outline-none font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
             >
               Register
@@ -127,11 +130,23 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import axios from "axios";
+import { useRouter } from "vue-router";
+import { useStore } from "./../stores/store.js";
+
+import { useToast } from "vue-toastification";
+import Swal from "sweetalert2";
+
+const toast = useToast();
+const router = useRouter();
+const store = useStore();
 
 const showPassword = ref(false);
 const showConfirmPassword = ref(false);
 const password = ref("");
+const username = ref("");
+const email = ref("");
 const confirm_password = ref("");
 
 const togglePassword = () => {
@@ -141,6 +156,70 @@ const togglePassword = () => {
 const toggleConfirmPassword = () => {
   showConfirmPassword.value = !showConfirmPassword.value;
 };
+
+const register = () => {
+  Swal.fire({
+    title: "Please Wait...",
+    allowOutsideClick: false,
+    didOpen: () => {
+      Swal.showLoading();
+    },
+  });
+  // axios with urlsearchparams
+  const params = new URLSearchParams();
+  params.append("username", username.value);
+  params.append("email", email.value);
+  params.append("password", password.value);
+  params.append("confirmPassword", confirm_password.value);
+
+  axios
+    .post("http://localhost:3000/api/auth/register", params, {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+    })
+    .then((res) => {
+      console.log(res.data.message);
+      Swal.fire({
+        icon: "success",
+        title: `${res.data.message}`,
+        text: "Silahkan login untuk melanjutkan",
+      });
+      router.push("/login");
+    })
+    .catch((error) => {
+      Swal.close();
+      let err = error.response.data.errors;
+      console.log(error);
+      let length = Object.keys(err).length;
+      // looping object err
+      for (let key in err) {
+        let msg = err[key];
+        console.log(msg);
+        console.log(username.value);
+        toast.error(msg.msg, {
+          position: "top-right",
+          timeout: 1500,
+          closeOnClick: true,
+          pauseOnFocusLoss: true,
+          pauseOnHover: true,
+          draggable: true,
+          draggablePercent: 0.6,
+          showCloseButtonOnHover: false,
+          hideProgressBar: false,
+          closeButton: "button",
+          icon: true,
+          rtl: false,
+        });
+      }
+    });
+};
+
+onMounted(() => {
+  if (store.isUserLoggedIn) {
+    router.push("/dashboard");
+  }
+});
 </script>
 
 <style lang="scss" scoped></style>

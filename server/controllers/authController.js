@@ -87,7 +87,9 @@ const login = async (req, res) => {
     user.refreshToken = refreshToken;
     await user.save();
 
-    res.status(200).json({ user, accessToken });
+    res
+      .status(200)
+      .json({ status: "true", message: "Berhasil Login", user, accessToken });
   } catch (error) {
     console.error(error);
     res

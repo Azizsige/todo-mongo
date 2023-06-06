@@ -6,7 +6,11 @@ const authRoutes = require("./routes/authRoutes");
 const todoRoutes = require("./routes/todoRoutes");
 const userRoutes = require("./routes/userRoutes");
 
+const cors = require("cors");
+
 const app = express();
+
+app.use(cors());
 
 app.use(express.urlencoded({ extended: true }));
 

@@ -26,6 +26,7 @@
               </label>
               <input
                 type="email"
+                v-model="email"
                 id="email"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-md rounded-lg focus:ring-secondaryColor focus:border-secondaryColor block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Your Email"
@@ -62,6 +63,7 @@
 
             <button
               type="submit"
+              @click.prevent="login"
               class="text-white bg-secondaryColor focus:ring-4 focus:outline-none font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
             >
               Login
@@ -84,12 +86,24 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
+import axios from "axios";
+
+import { useStore } from "./../stores/store.js";
+
+import { useToast } from "vue-toastification";
+import Swal from "sweetalert2";
+
+const toast = useToast();
+const router = useRouter();
+const store = useStore();
 
 const showPassword = ref(false);
 const showConfirmPassword = ref(false);
-const password = ref("");
 const confirm_password = ref("");
+const password = ref("");
+const email = ref("");
 
 const togglePassword = () => {
   showPassword.value = !showPassword.value;
@@ -98,6 +112,85 @@ const togglePassword = () => {
 const toggleConfirmPassword = () => {
   showConfirmPassword.value = !showConfirmPassword.value;
 };
+
+const login = () => {
+  Swal.fire({
+    title: "Please Wait...",
+    allowOutsideClick: false,
+    didOpen: () => {
+      Swal.showLoading();
+    },
+  });
+
+  const params = new URLSearchParams();
+
+  params.append("email", email.value);
+  params.append("password", password.value);
+
+  axios
+    .post("http://localhost:3000/api/auth/login", params, {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+    })
+    .then((res) => {
+      if (res.data.status) {
+        console.log(res.data);
+        let accessToken = res.data.accessToken;
+        let refreshToken = res.data.user.refreshToken;
+        store.accessToken = accessToken;
+        store.refreshToken = refreshToken;
+        // let id = res.data.data.id;
+        // store.userToken = token;
+        store.isUserLoggedIn = true;
+        // store.userId = id;
+        Swal.fire({
+          icon: "success",
+          title: `${res.data.message}`,
+        });
+        // router.push({ name: "dashboard" });
+        router.push("/dashboard");
+      } else {
+        // store.isUserLoggedIn = false;
+        // store.userToken = null;
+        Swal.fire({
+          icon: "error",
+          title: `${res.data.message}`,
+        });
+      }
+    })
+    .catch((error) => {
+      Swal.close();
+      let err = error.response.data.errors;
+      console.log(err);
+      let length = Object.keys(err).length;
+      // looping object err
+      for (let key in err) {
+        let msg = err[key];
+        console.log(msg);
+        toast.error(msg.msg, {
+          position: "top-right",
+          timeout: 3000,
+          closeOnClick: true,
+          pauseOnFocusLoss: true,
+          pauseOnHover: true,
+          draggable: true,
+          draggablePercent: 0.6,
+          showCloseButtonOnHover: false,
+          hideProgressBar: false,
+          closeButton: "button",
+          icon: true,
+          rtl: false,
+        });
+      }
+    });
+};
+
+onMounted(() => {
+  if (store.isUserLoggedIn) {
+    router.push("/dashboard");
+  }
+});
 </script>
 
 <style lang="scss" scoped></style>
