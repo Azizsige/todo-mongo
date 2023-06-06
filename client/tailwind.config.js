@@ -11,6 +11,7 @@ export default {
       fontFamily: {
         Rosario: ["Rosario", "sans-serif"],
         Rowdies: ["Rowdies", "cursive"],
+        Roboto: ["Roboto", "sans-serif"],
       },
       colors: {
         primaryColor: "#000000",

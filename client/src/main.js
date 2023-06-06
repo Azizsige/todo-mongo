@@ -5,6 +5,7 @@ import App from "./App.vue";
 import router from "./router/router";
 // plugin
 import("preline");
+// import("flowbite");
 // vueuse motion
 import { MotionPlugin } from "@vueuse/motion";
 
