@@ -138,17 +138,15 @@ const login = () => {
         console.log(res.data);
         let accessToken = res.data.accessToken;
         let refreshToken = res.data.user.refreshToken;
+        let expiredAt = res.data.user.updatedAt;
         store.accessToken = accessToken;
         store.refreshToken = refreshToken;
-        // let id = res.data.data.id;
-        // store.userToken = token;
+        store.expiredAt = expiredAt;
         store.isUserLoggedIn = true;
-        // store.userId = id;
         Swal.fire({
           icon: "success",
           title: `${res.data.message}`,
         });
-        // router.push({ name: "dashboard" });
         router.push("/dashboard");
       } else {
         // store.isUserLoggedIn = false;

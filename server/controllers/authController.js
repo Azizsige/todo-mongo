@@ -40,12 +40,18 @@ const register = async (req, res) => {
       expiresIn: "5min",
     });
 
-    res.status(201).json({ message: "Registration successful", user, token });
+    res.status(201).json({
+      status: "true",
+      message: "Registration successful",
+      user,
+      token,
+    });
   } catch (error) {
     console.error(error);
-    res
-      .status(500)
-      .json({ message: "Internal Server Error or Token has been expired" });
+    res.status(500).json({
+      status: "false",
+      message: "Internal Server Error or Token has been expired",
+    });
   }
 };
 
@@ -75,12 +81,12 @@ const login = async (req, res) => {
 
     // Generate access token
     const accessToken = jwt.sign({ userId: user._id }, config.JWT_SECRET, {
-      expiresIn: "15m",
+      expiresIn: "12h",
     });
 
     // Generate refresh token
     const refreshToken = jwt.sign({ userId: user._id }, config.JWT_SECRET, {
-      expiresIn: "1h",
+      expiresIn: "1d",
     });
 
     // Simpan refresh token ke dalam user
@@ -89,12 +95,19 @@ const login = async (req, res) => {
 
     res
       .status(200)
-      .json({ status: "true", message: "Berhasil Login", user, accessToken });
+      .json({
+        status: "true",
+        message: "Berhasil Login",
+        user,
+        accessToken,
+        expiresIn: "12h",
+      });
   } catch (error) {
     console.error(error);
-    res
-      .status(500)
-      .json({ message: "Internal Server Error or Token has been expired" });
+    res.status(500).json({
+      status: "false",
+      message: "Internal Server Error or Token has been expired",
+    });
   }
 };
 
@@ -112,10 +125,12 @@ const logout = async (req, res) => {
     user.refreshToken = null;
     await user.save();
 
-    res.status(200).json({ message: "Successfully logged out" });
+    res
+      .status(200)
+      .json({ status: "true", message: "Successfully logged out" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({ status: "false", message: "Internal Server Error" });
   }
 };
 
@@ -123,10 +138,10 @@ const logout = async (req, res) => {
 const getAllUser = async (req, res) => {
   try {
     const users = await User.find();
-    res.status(200).json({ users });
+    res.status(200).json({ status: "true", users });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({ status: "false", message: "Internal Server Error" });
   }
 };
 
