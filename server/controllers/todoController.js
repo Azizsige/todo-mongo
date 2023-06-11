@@ -4,15 +4,24 @@ const User = require("../models/User");
 
 const createTodo = async (req, res) => {
   try {
-    const { title, description } = req.body;
+    const { title, description, isDone } = req.body;
     const userId = req.user.userId;
 
-    const todo = await Todo.create({ title, description, user: userId });
+    const todo = await Todo.create({
+      title,
+      description,
+      isDone,
+      user: userId,
+    });
 
-    res.status(201).json({ status: "true", message: "Todo created", todo });
+    res
+      .status(201)
+      .json({ status: "true", message: "Todo berhasil ditambahkan", todo });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res
+      .status(500)
+      .json({ status: "false", message: "Todo gagal ditambahkan" });
   }
 };
 
@@ -53,18 +62,22 @@ const getCurrentUserTodos = async (req, res) => {
 const updateTodo = async (req, res) => {
   try {
     const todoId = req.params.id;
-    const { title, description, completed } = req.body;
+    const { title, description, isDone } = req.body;
 
     const updatedTodo = await Todo.findByIdAndUpdate(
       todoId,
-      { title, description, completed },
+      { title, description, isDone },
       { new: true }
     );
 
-    res.status(200).json({ todo: updatedTodo });
+    res.status(200).json({
+      status: "true",
+      message: "Todo berhasil di Update",
+      todo: updatedTodo,
+    });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({ status: "false", message: "Todo gagal diupdate" });
   }
 };
 
@@ -79,10 +92,10 @@ const deleteTodo = async (req, res) => {
       return res.status(404).json({ message: "Todo not found" });
     }
 
-    res.status(200).json({ message: "Todo deleted successfully" });
+    res.status(200).json({ status: "true", message: "Todo berhasil dihapus!" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({ status: "false", message: "Todo gagal dihapus!" });
   }
 };
 

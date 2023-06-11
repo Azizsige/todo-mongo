@@ -15,10 +15,12 @@ const description = ref("");
 const store = useStore();
 
 const todoItems = ref([]);
+const todoLength = ref(null);
 
 const renderData = async () => {
   todoItems.value = await store.getData;
-  console.log(todoItems.value);
+  console.log(todoItems.value.length);
+  todoLength.value = await todoItems.value.length;
 };
 
 const toogleAddTodoForm = () => {
@@ -59,6 +61,8 @@ const addTodo = async () => {
           title: `${res.data.message}`,
         });
         toogleAddTodoForm();
+        title.value = "";
+        description.value = "";
       }
     })
     .catch((err) => {
@@ -69,15 +73,88 @@ const addTodo = async () => {
 onMounted(async () => {
   await renderData();
   await initFlowbite();
+  console.log(todoItems.value);
 });
 </script>
 
 <template>
   <div class="heading">
     <h1 class="text-[48px] text-secondaryColor font-bold">Today</h1>
-    <p class="text-[#414141] text-[18px]">4/6 completed</p>
+    <p class="text-[#414141] text-[18px]">4/{{ todoLength }} completed</p>
   </div>
-  <div class="mt-10 list-todo">
+
+  <div v-if="todoLength == 0" class="mt-10 list-todo">
+    <a
+      href="#"
+      class="block w-full p-6 border rounded-lg shadow bg-secondaryColor border-secondaryColor"
+    >
+      <h5 class="mb-2 text-2xl font-bold tracking-tight text-center text-white">
+        No Todo
+      </h5>
+    </a>
+
+    <form v-if="showAddTodo">
+      <div class="">
+        <input
+          type="text"
+          v-model="title"
+          id="title"
+          class="bg-[#E7E7E7] text-black border border-gray-300 text-lg font-bold rounded-lg focus:ring-secondaryColor focus:border-secondaryColor block w-full p-2.5"
+          placeholder="Task title"
+          required
+        />
+      </div>
+      <div class="mb-6">
+        <textarea
+          id="message"
+          v-model="description"
+          rows="4"
+          class="bg-[#E7E7E7] text-black border border-gray-300 text-lg rounded-lg focus:ring-secondaryColor focus:border-secondaryColor block w-full p-2.5"
+          placeholder="Description"
+        ></textarea>
+      </div>
+      <div class="flex space-x-2 buttonAddTodo">
+        <button
+          @click.prevent="addTodo"
+          type="submit"
+          class="text-white bg-secondaryColor focus:ring-4 focus:outline-none font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
+        >
+          Submit
+        </button>
+        <button
+          @click.prevent="showAddTodo = !showAddTodo"
+          type="submit"
+          class="text-secondaryColor bg-transparent border-secondaryColor border-2 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
+        >
+          Cancel
+        </button>
+      </div>
+    </form>
+
+    <button
+      @click.prevent="showAddTodo = !showAddTodo"
+      type="button"
+      :class="showAddTodo ? 'hidden' : 'block'"
+      class="text-secondaryColor font-medium rounded-lg text-lg py-2.5 space-x-5 flex items-center dark:focus:ring-[#3b5998]/55 mr-2 mb-2"
+    >
+      <svg
+        class="mr-5"
+        width="26"
+        height="26"
+        viewBox="0 0 26 26"
+        fill="currentColor"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M13 25.25C19.7655 25.25 25.25 19.7655 25.25 13C25.25 6.2345 19.7655 0.75 13 0.75C6.2345 0.75 0.75 6.2345 0.75 13C0.75 19.7655 6.2345 25.25 13 25.25ZM12.125 8.625C12.125 8.39294 12.2172 8.17038 12.3813 8.00628C12.5454 7.84219 12.7679 7.75 13 7.75C13.2321 7.75 13.4546 7.84219 13.6187 8.00628C13.7828 8.17038 13.875 8.39294 13.875 8.625V12.125H17.375C17.6071 12.125 17.8296 12.2172 17.9937 12.3813C18.1578 12.5454 18.25 12.7679 18.25 13C18.25 13.2321 18.1578 13.4546 17.9937 13.6187C17.8296 13.7828 17.6071 13.875 17.375 13.875H13.875V17.375C13.875 17.6071 13.7828 17.8296 13.6187 17.9937C13.4546 18.1578 13.2321 18.25 13 18.25C12.7679 18.25 12.5454 18.1578 12.3813 17.9937C12.2172 17.8296 12.125 17.6071 12.125 17.375V13.875H8.625C8.39294 13.875 8.17038 13.7828 8.00628 13.6187C7.84219 13.4546 7.75 13.2321 7.75 13C7.75 12.7679 7.84219 12.5454 8.00628 12.3813C8.17038 12.2172 8.39294 12.125 8.625 12.125H12.125V8.625Z"
+          fill="#FF4F5A"
+        />
+      </svg>
+
+      Add Task
+    </button>
+  </div>
+  <div class="mt-10 list-todo" v-else>
     <form action="">
       <div
         class="flex items-center form-group"
