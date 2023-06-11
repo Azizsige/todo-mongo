@@ -291,8 +291,6 @@ import { useRouter } from "vue-router";
 
 import { useStore } from "./../stores/store.js";
 
-import { initFlowbite } from "flowbite";
-
 import axios from "axios";
 
 const router = useRouter();
@@ -385,7 +383,6 @@ onMounted(() => {
   }
 
   getExpired();
-  initFlowbite();
 });
 // import { onMounted } from "vue";
 // import { initFlowbite } from "flowbite";

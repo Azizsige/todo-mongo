@@ -19,21 +19,22 @@ export const useStore = defineStore("store", {
     isUserLoggedIn: false,
   }),
   getters: {
-    getData() {
-      axios
-        .get("http://localhost:3000/api/users/me", {
+    async getData() {
+      try {
+        const response = await axios.get("http://localhost:3000/api/users/me", {
           headers: {
             Authorization: `Bearer ${this.refreshToken}`,
           },
-        })
-        .then((response) => {
-          this.dataUser = response.data.user.todos;
-          console.log(this.dataUser);
-          // console.log(this.dataUser);
-        })
-        .catch((error) => {
-          console.log(error);
         });
+        this.dataUser = response.data.user.todos;
+        return this.dataUser;
+      } catch (error) {
+        console.log(error);
+        return null;
+      }
+    },
+    async addTodo(todo) {
+      this.dataUser.push(todo);
     },
   },
   persist: {

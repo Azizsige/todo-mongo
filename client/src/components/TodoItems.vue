@@ -1,11 +1,75 @@
 <script setup>
 import { useStore } from "./../stores/store.js";
 import { ref, onMounted } from "vue";
+import { initFlowbite } from "flowbite";
+
+import Swal from "sweetalert2";
+
+import axios from "axios";
+
+const showAddTodo = ref(false);
+const showAddTodoButton = ref(true);
+const title = ref("");
+const description = ref("");
 
 const store = useStore();
 
-const todoItems = ref(store.getData);
-console.log(todoItems.value);
+const todoItems = ref([]);
+
+const renderData = async () => {
+  todoItems.value = await store.getData;
+  console.log(todoItems.value);
+};
+
+const toogleAddTodoForm = () => {
+  showAddTodo.value = !showAddTodo.value;
+  showAddTodoButton.value = !showAddTodoButton.value;
+};
+
+const addTodo = async () => {
+  Swal.fire({
+    title: "Please Wait...",
+    allowOutsideClick: false,
+    didOpen: () => {
+      Swal.showLoading();
+    },
+  });
+
+  const params = new URLSearchParams();
+
+  params.append("description", description.value);
+  params.append("title", title.value);
+
+  await axios
+    .post("http://localhost:3000/api/todos/", params, {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        Authorization: `Bearer ${store.accessToken}`,
+      },
+    })
+    .then((res) => {
+      // console.log(res.data);
+      if (res.data.status) {
+        // router.push("/");
+        let addTodoData = res.data.todo;
+        store.dataUser.push(addTodoData);
+        renderData();
+        Swal.fire({
+          icon: "success",
+          title: `${res.data.message}`,
+        });
+        toogleAddTodoForm();
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+onMounted(async () => {
+  await renderData();
+  await initFlowbite();
+});
 </script>
 
 <template>
@@ -15,20 +79,23 @@ console.log(todoItems.value);
   </div>
   <div class="mt-10 list-todo">
     <form action="">
-      <div class="flex items-center form-group">
-        <input type="checkbox" id="html" />
-        <label for="html" class="flex items-center w-full">
+      <div
+        class="flex items-center form-group"
+        v-for="item in todoItems"
+        :key="item.id"
+      >
+        <input type="checkbox" :id="item._id" />
+        <label :for="item._id" class="flex items-center w-full">
           <div
             class="todo-content hover:bg-gray-100 hover:border-secondaryColor flex items-center ml-3 justify-between px-5 py-3 border border-[#E3E3E3] rounded-[8px] w-full"
           >
             <div class="content--text">
               <div class="todo__title text-[24px]">
-                <h4>Cooking a salmon sushi</h4>
+                <h4>{{ item.title }}</h4>
               </div>
               <div class="todo__description text-[#787878] text-[22px]">
                 <h5>
-                  Salmon and tuna i think is good for dinner, i wanna make it
-                  today :D
+                  {{ item.description }}
                 </h5>
               </div>
             </div>
@@ -124,6 +191,67 @@ console.log(todoItems.value);
         </label>
       </div>
     </form>
+
+    <form v-if="showAddTodo">
+      <div class="">
+        <input
+          type="text"
+          v-model="title"
+          id="title"
+          class="bg-[#E7E7E7] text-black border border-gray-300 text-lg font-bold rounded-lg focus:ring-secondaryColor focus:border-secondaryColor block w-full p-2.5"
+          placeholder="Task title"
+          required
+        />
+      </div>
+      <div class="mb-6">
+        <textarea
+          id="message"
+          v-model="description"
+          rows="4"
+          class="bg-[#E7E7E7] text-black border border-gray-300 text-lg rounded-lg focus:ring-secondaryColor focus:border-secondaryColor block w-full p-2.5"
+          placeholder="Description"
+        ></textarea>
+      </div>
+      <div class="flex space-x-2 buttonAddTodo">
+        <button
+          @click.prevent="addTodo"
+          type="submit"
+          class="text-white bg-secondaryColor focus:ring-4 focus:outline-none font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
+        >
+          Submit
+        </button>
+        <button
+          @click.prevent="showAddTodo = !showAddTodo"
+          type="submit"
+          class="text-secondaryColor bg-transparent border-secondaryColor border-2 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
+        >
+          Cancel
+        </button>
+      </div>
+    </form>
+
+    <button
+      @click.prevent="showAddTodo = !showAddTodo"
+      type="button"
+      :class="showAddTodo ? 'hidden' : 'block'"
+      class="text-secondaryColor font-medium rounded-lg text-lg py-2.5 space-x-5 flex items-center dark:focus:ring-[#3b5998]/55 mr-2 mb-2"
+    >
+      <svg
+        class="mr-5"
+        width="26"
+        height="26"
+        viewBox="0 0 26 26"
+        fill="currentColor"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M13 25.25C19.7655 25.25 25.25 19.7655 25.25 13C25.25 6.2345 19.7655 0.75 13 0.75C6.2345 0.75 0.75 6.2345 0.75 13C0.75 19.7655 6.2345 25.25 13 25.25ZM12.125 8.625C12.125 8.39294 12.2172 8.17038 12.3813 8.00628C12.5454 7.84219 12.7679 7.75 13 7.75C13.2321 7.75 13.4546 7.84219 13.6187 8.00628C13.7828 8.17038 13.875 8.39294 13.875 8.625V12.125H17.375C17.6071 12.125 17.8296 12.2172 17.9937 12.3813C18.1578 12.5454 18.25 12.7679 18.25 13C18.25 13.2321 18.1578 13.4546 17.9937 13.6187C17.8296 13.7828 17.6071 13.875 17.375 13.875H13.875V17.375C13.875 17.6071 13.7828 17.8296 13.6187 17.9937C13.4546 18.1578 13.2321 18.25 13 18.25C12.7679 18.25 12.5454 18.1578 12.3813 17.9937C12.2172 17.8296 12.125 17.6071 12.125 17.375V13.875H8.625C8.39294 13.875 8.17038 13.7828 8.00628 13.6187C7.84219 13.4546 7.75 13.2321 7.75 13C7.75 12.7679 7.84219 12.5454 8.00628 12.3813C8.17038 12.2172 8.39294 12.125 8.625 12.125H12.125V8.625Z"
+          fill="#FF4F5A"
+        />
+      </svg>
+
+      Add Task
+    </button>
     <!-- Main modal -->
     <div
       id="authentication-modal"

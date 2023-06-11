@@ -6,7 +6,7 @@ const menuItems = defineProps({
 
 <template>
   <header
-    class="z-50 flex flex-wrap w-full pt-8 lg:pt-[50px] text-sm bg-white sm:justify-start sm:flex-nowrap"
+    class="z-50 flex flex-wrap w-full py-8 lg:pt-[50px] text-sm bg-white sm:justify-start sm:flex-nowrap"
   >
     <nav
       class="max-w-[85rem] w-full mx-auto px-4 sm:flex sm:items-center sm:justify-between"

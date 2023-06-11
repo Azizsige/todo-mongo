@@ -9,7 +9,7 @@ const createTodo = async (req, res) => {
 
     const todo = await Todo.create({ title, description, user: userId });
 
-    res.status(201).json({ message: "Todo created", todo });
+    res.status(201).json({ status: "true", message: "Todo created", todo });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });

@@ -1,4 +1,6 @@
-<script setup></script>
+<script setup>
+import { onMounted } from "vue";
+</script>
 
 <template>
   <router-view></router-view>
