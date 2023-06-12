@@ -19,6 +19,10 @@ export const useStore = defineStore("store", {
     dataUser: null,
 
     isUserLoggedIn: false,
+
+    // data todo for update
+    todoTitleStore: null,
+    todoDescriptionStore: null,
   }),
   getters: {
     // async getTodoLength() {
@@ -106,6 +110,44 @@ export const useStore = defineStore("store", {
       } catch (err) {
         console.log(err);
       }
+    },
+    async updateTodoStore(id, description, title) {
+      Swal.fire({
+        title: "Please Wait...",
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+      const params = new URLSearchParams();
+
+      params.append("description", description);
+      params.append("title", title);
+
+      await axios
+        .put(`http://localhost:3000/api/todos/${id}`, params, {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            Authorization: `Bearer ${this.accessToken}`,
+          },
+        })
+        .then((res) => {
+          Swal.fire({
+            icon: "success",
+            title: `${res.data.message}`,
+          });
+
+          // console.log(res.data);
+          if (res.data.status) {
+            description = "";
+            title = "";
+            // router.push("/");
+            console.log(res.data);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     testingStoreAction() {
       console.log("testing store action");

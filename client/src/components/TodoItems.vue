@@ -12,6 +12,11 @@ const showAddTodoButton = ref(true);
 const title = ref("");
 const description = ref("");
 const showDeleteButton = ref(false);
+const showFormModal = ref(false);
+
+const todoTitle = ref("");
+const todoDescription = ref("");
+const todoId = ref("");
 
 const store = useStore();
 
@@ -38,6 +43,28 @@ const addTodo = async () => {
   await toogleAddTodoForm();
   title.value = "";
   description.value = "";
+};
+
+const getFormUpdate = (title, description, id) => {
+  todoTitle.value = title;
+  todoDescription.value = description;
+  todoId.value = id;
+
+  console.log(todoTitle.value, todoDescription.value, todoId.value);
+
+  showFormModal.value = !showFormModal.value;
+
+  console.log(showFormModal.value);
+
+  // store.todoTitleStore = title;
+  // store.todoDescriptionStore = description;
+};
+
+const updateTodo = () => {
+  store.updateTodoStore(todoId.value, todoDescription.value, todoTitle.value);
+  renderData();
+  showFormModal.value = !showFormModal.value;
+  // toogleAddTodoForm();
 };
 
 // get id property when click delete button use event.target.id
@@ -157,9 +184,8 @@ onMounted(async () => {
             <div class="flex space-x-3 content--action">
               <!-- Modal toggle -->
               <button
-                data-modal-target="authentication-modal"
-                data-modal-toggle="authentication-modal"
                 class="block text-white"
+                @click="getFormUpdate(item.title, item.description, item._id)"
                 type="button"
               >
                 <svg
@@ -288,15 +314,17 @@ onMounted(async () => {
     </button>
     <!-- Main modal -->
     <div
-      id="authentication-modal"
-      tabindex="-1"
-      aria-hidden="true"
-      class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full"
+      :class="
+        showFormModal
+          ? 'fixed top-0 left-0 right-0 z-50 w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0  max-h-full justify-center items-center flex bg-black bg-opacity-50 h-screen'
+          : ' fixed top-0 left-0 right-0 z-50 w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full justify-center items-center hidden'
+      "
     >
       <div class="relative w-full max-w-md max-h-full">
         <!-- Modal content -->
         <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
           <button
+            @click.prevent="showFormModal = !showFormModal"
             type="button"
             class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white"
             data-modal-hide="authentication-modal"
@@ -328,7 +356,7 @@ onMounted(async () => {
                   >Your email</label
                 >
                 <input
-                  type="email"
+                  v-model="todoTitle"
                   name="email"
                   id="email"
                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
@@ -343,7 +371,7 @@ onMounted(async () => {
                   >Your password</label
                 >
                 <input
-                  type="password"
+                  v-model="todoDescription"
                   name="password"
                   id="password"
                   placeholder="••••••••"
@@ -351,31 +379,10 @@ onMounted(async () => {
                   required
                 />
               </div>
-              <div class="flex justify-between">
-                <div class="flex items-start">
-                  <div class="flex items-center h-5">
-                    <input
-                      id="remember"
-                      type="checkbox"
-                      value=""
-                      class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-600 dark:border-gray-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800"
-                      required
-                    />
-                  </div>
-                  <label
-                    for="remember"
-                    class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                    >Remember me</label
-                  >
-                </div>
-                <a
-                  href="#"
-                  class="text-sm text-blue-700 hover:underline dark:text-blue-500"
-                  >Lost Password?</a
-                >
-              </div>
+
               <button
                 type="submit"
+                @click.prevent="updateTodo"
                 class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
               >
                 Login to your account
@@ -454,6 +461,12 @@ onMounted(async () => {
   inset: 0px auto auto 0px;
   margin: 0px;
 }
+
+/*.showModalForm {
+  fixed top-0 left-0 right-0 z-50 w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full justify-center items-center flex
+
+  fixed top-0 left-0 right-0 z-50 w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full justify-center items-center hidden
+} */
 /* #dropdownDotsHorizontal {
   transform: translate(824px, 79px) !important;
 } */
