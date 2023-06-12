@@ -11,6 +11,7 @@ const showAddTodo = ref(false);
 const showAddTodoButton = ref(true);
 const title = ref("");
 const description = ref("");
+const showDeleteButton = ref(false);
 
 const store = useStore();
 
@@ -18,9 +19,11 @@ const todoItems = ref([]);
 const todoLength = ref(null);
 
 const renderData = async () => {
-  todoItems.value = await store.getData;
-  console.log(todoItems.value.length);
-  todoLength.value = await todoItems.value.length;
+  todoItems.value = await store.getData();
+};
+
+const renderLength = async () => {
+  todoLength.value = await todoItems.length;
 };
 
 const toogleAddTodoForm = () => {
@@ -29,69 +32,43 @@ const toogleAddTodoForm = () => {
 };
 
 const addTodo = async () => {
-  Swal.fire({
-    title: "Please Wait...",
-    allowOutsideClick: false,
-    didOpen: () => {
-      Swal.showLoading();
-    },
-  });
+  store.testingStoreAction();
+  await store.addTodoStore(description.value, title.value);
+  await renderData();
+  await toogleAddTodoForm();
+  title.value = "";
+  description.value = "";
+};
 
-  const params = new URLSearchParams();
-
-  params.append("description", description.value);
-  params.append("title", title.value);
-
-  await axios
-    .post("http://localhost:3000/api/todos/", params, {
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-        Authorization: `Bearer ${store.accessToken}`,
-      },
-    })
-    .then((res) => {
-      // console.log(res.data);
-      if (res.data.status) {
-        // router.push("/");
-        let addTodoData = res.data.todo;
-        store.dataUser.push(addTodoData);
-        renderData();
-        Swal.fire({
-          icon: "success",
-          title: `${res.data.message}`,
-        });
-        toogleAddTodoForm();
-        title.value = "";
-        description.value = "";
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+// get id property when click delete button use event.target.id
+const deleteTodo = async (id, event) => {
+  await store.deleteTodo(id);
+  await renderData();
+  await renderLength();
 };
 
 onMounted(async () => {
   await renderData();
   await initFlowbite();
-  console.log(todoItems.value);
+  // console.log(todoItems.value);
 });
 </script>
 
 <template>
   <div class="heading">
     <h1 class="text-[48px] text-secondaryColor font-bold">Today</h1>
-    <p class="text-[#414141] text-[18px]">4/{{ todoLength }} completed</p>
+    <p class="text-[#414141] text-[18px]">4/{{ todoItems.length }} completed</p>
   </div>
 
   <div v-if="todoLength == 0" class="mt-10 list-todo">
-    <a
+    <div
       href="#"
       class="block w-full p-6 border rounded-lg shadow bg-secondaryColor border-secondaryColor"
     >
       <h5 class="mb-2 text-2xl font-bold tracking-tight text-center text-white">
         No Todo
       </h5>
-    </a>
+    </div>
 
     <form v-if="showAddTodo">
       <div class="">
@@ -164,6 +141,7 @@ onMounted(async () => {
         <input type="checkbox" :id="item._id" />
         <label :for="item._id" class="flex items-center w-full">
           <div
+            :id="item._id"
             class="todo-content hover:bg-gray-100 hover:border-secondaryColor flex items-center ml-3 justify-between px-5 py-3 border border-[#E3E3E3] rounded-[8px] w-full"
           >
             <div class="content--text">
@@ -203,37 +181,16 @@ onMounted(async () => {
                   />
                 </svg>
               </button>
-              <button
-                id="dropdownMenuIconHorizontalButton"
-                data-dropdown-toggle="dropdownDotsHorizontal"
-                class="inline-flex items-center p-2 text-sm font-medium text-center text-gray-900 bg-transparent rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-                type="button"
-              >
-                <svg
-                  width="26"
-                  height="26"
-                  viewBox="0 0 26 26"
-                  fill="currentColor"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M4.875 15.4375C4.22853 15.4375 3.60855 15.1807 3.15143 14.7236C2.69431 14.2665 2.4375 13.6465 2.4375 13C2.4375 12.3535 2.69431 11.7335 3.15143 11.2764C3.60855 10.8193 4.22853 10.5625 4.875 10.5625C5.52147 10.5625 6.14145 10.8193 6.59857 11.2764C7.05569 11.7335 7.3125 12.3535 7.3125 13C7.3125 13.6465 7.05569 14.2665 6.59857 14.7236C6.14145 15.1807 5.52147 15.4375 4.875 15.4375ZM13 15.4375C12.3535 15.4375 11.7335 15.1807 11.2764 14.7236C10.8193 14.2665 10.5625 13.6465 10.5625 13C10.5625 12.3535 10.8193 11.7335 11.2764 11.2764C11.7335 10.8193 12.3535 10.5625 13 10.5625C13.6465 10.5625 14.2665 10.8193 14.7236 11.2764C15.1807 11.7335 15.4375 12.3535 15.4375 13C15.4375 13.6465 15.1807 14.2665 14.7236 14.7236C14.2665 15.1807 13.6465 15.4375 13 15.4375ZM21.125 15.4375C20.4785 15.4375 19.8585 15.1807 19.4014 14.7236C18.9443 14.2665 18.6875 13.6465 18.6875 13C18.6875 12.3535 18.9443 11.7335 19.4014 11.2764C19.8585 10.8193 20.4785 10.5625 21.125 10.5625C21.7715 10.5625 22.3915 10.8193 22.8486 11.2764C23.3057 11.7335 23.5625 12.3535 23.5625 13C23.5625 13.6465 23.3057 14.2665 22.8486 14.7236C22.3915 15.1807 21.7715 15.4375 21.125 15.4375Z"
-                    fill="#8E8E8E"
-                  />
-                </svg>
-              </button>
 
               <!-- Dropdown menu -->
               <div
-                id="dropdownDotsHorizontal"
-                class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600"
+                class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600"
               >
-                <ul
-                  class="py-2 text-sm text-gray-700 dark:text-gray-200"
-                  aria-labelledby="dropdownMenuIconHorizontalButton"
-                >
+                <ul class="py-2 text-sm text-gray-700 dark:text-gray-200">
                   <li>
                     <a
+                      :id="item._id"
+                      @click="deleteTodo(item._id, $event)"
                       href="#"
                       class="flex px-4 py-2 text-[18px] text-secondaryColor hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                     >
@@ -484,6 +441,18 @@ onMounted(async () => {
   border: solid #ff4f5a;
   border-width: 0 2px 2px 0;
   transform: rotate(45deg);
+}
+
+.showDeleteButton {
+  position: absolute;
+  inset: 0px auto auto 0px;
+  margin: 0px;
+}
+
+.hiddenDeleteButton {
+  position: absolute;
+  inset: 0px auto auto 0px;
+  margin: 0px;
 }
 /* #dropdownDotsHorizontal {
   transform: translate(824px, 79px) !important;
