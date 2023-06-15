@@ -164,7 +164,7 @@ onMounted(async () => {
     </button>
   </div>
   <div class="mt-10 list-todo" v-else>
-    <form action="">
+    <form action="" class="w-full">
       <div
         class="flex items-center form-group"
         v-for="item in todoItems"
@@ -178,9 +178,9 @@ onMounted(async () => {
             :class="
               item.isDone
                 ? 'bg-white'
-                : 'hover:bg-gray-100 flex items-center ml-3 justify-between px-5 py-3 border border-[#E3E3E3] rounded-[8px] w-full'
+                : 'hover:bg-gray-100 flex lg:items-center ml-3 justify-between px-5 py-3 border border-[#E3E3E3] rounded-[8px] w-full'
             "
-            class="todo-content hover:bg-gray-100 flex items-center ml-3 justify-between px-5 py-3 border border-[#E3E3E3] rounded-[8px] w-full"
+            class="todo-content hover:bg-gray-100 flex flex-col items-start lg:flex-row lg:items-center ml-3 justify-between px-5 py-3 border border-[#E3E3E3] rounded-[8px] w-[70vw] lg:w-full"
           >
             <div class="content--text">
               <div class="todo__title text-[24px]">
@@ -192,7 +192,9 @@ onMounted(async () => {
                 </h5>
               </div>
             </div>
-            <div class="flex space-x-3 content--action">
+            <div
+              class="flex w-full justify-between items-center lg:w-auto lg:space-x-3 content--action"
+            >
               <!-- Modal toggle -->
               <button
                 class="block text-white"
@@ -221,7 +223,7 @@ onMounted(async () => {
 
               <!-- Dropdown menu -->
               <div
-                class="z-10 bg-white divide-y hover:border-secondaryColor hover:border-2 border-2 border-transparent divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600"
+                class="z-10 bg-white divide-y hover:border-secondaryColor hover:border-2 border-2 border-transparent divide-gray-100 rounded-lg shadow lg:w-44 dark:bg-gray-700 dark:divide-gray-600"
               >
                 <ul class="py-2 text-sm text-gray-700 dark:text-gray-200">
                   <li>
@@ -229,7 +231,7 @@ onMounted(async () => {
                       :id="item._id"
                       @click.prevent="deleteTodo(item._id, $event)"
                       href="#"
-                      class="flex w-full px-4 py-2 text-[18px] text-secondaryColor dark:hover:bg-gray-600 dark:hover:text-white"
+                      class="flex lg:w-full px-4 py-2 text-[18px] text-secondaryColor dark:hover:bg-gray-600 dark:hover:text-white"
                     >
                       <svg
                         width="18"
@@ -452,7 +454,7 @@ onMounted(async () => {
   content: "";
   display: block;
   position: absolute;
-  top: 35px;
+  top: 62px;
   left: 9px;
   width: 9px;
   height: 17px;
@@ -488,6 +490,35 @@ div.todo-content.isDone {
   position: absolute;
   inset: 0px auto auto 0px;
   margin: 0px;
+}
+
+@media (min-width: 640px) {
+  .form-group input:checked + label:after {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 62px;
+    left: 9px;
+    width: 9px;
+    height: 17px;
+    border: solid #ff4f5a;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+}
+@media (min-width: 1024px) {
+  .form-group input:checked + label:after {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 35px;
+    left: 9px;
+    width: 9px;
+    height: 17px;
+    border: solid #ff4f5a;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
 }
 
 /*.showModalForm {
