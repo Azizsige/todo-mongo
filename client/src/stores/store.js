@@ -32,11 +32,14 @@ export const useStore = defineStore("store", {
   actions: {
     async getData() {
       try {
-        const response = await axios.get("http://localhost:3000/api/users/me", {
-          headers: {
-            Authorization: `Bearer ${this.refreshToken}`,
-          },
-        });
+        const response = await axios.get(
+          "https://todo-mongo-api-one.vercel.app/api/users/me",
+          {
+            headers: {
+              Authorization: `Bearer ${this.refreshToken}`,
+            },
+          }
+        );
         this.dataUser = response.data.user.todos;
         return this.dataUser;
       } catch (error) {
@@ -58,7 +61,7 @@ export const useStore = defineStore("store", {
       params.append("title", title);
 
       await axios
-        .post("http://localhost:3000/api/todos/", params, {
+        .post("https://todo-mongo-api-one.vercel.app/api/todos/", params, {
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
             Authorization: `Bearer ${this.accessToken}`,
@@ -92,7 +95,7 @@ export const useStore = defineStore("store", {
           },
         });
         axios
-          .delete(`http://localhost:3000/api/todos/${id}`, {
+          .delete(`https://todo-mongo-api-one.vercel.app/api/todos/${id}`, {
             headers: {
               Authorization: `Bearer ${this.accessToken}`,
             },
@@ -125,7 +128,7 @@ export const useStore = defineStore("store", {
       params.append("title", title);
 
       await axios
-        .put(`http://localhost:3000/api/todos/${id}`, params, {
+        .put(`https://todo-mongo-api-one.vercel.app/api/todos/${id}`, params, {
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
             Authorization: `Bearer ${this.accessToken}`,
@@ -163,12 +166,16 @@ export const useStore = defineStore("store", {
       const params = new URLSearchParams();
       params.append("isDone", isDone);
       await axios
-        .patch(`http://localhost:3000/api/todos/${id}`, params, {
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-            Authorization: `Bearer ${this.accessToken}`,
-          },
-        })
+        .patch(
+          `https://todo-mongo-api-one.vercel.app/api/todos/${id}`,
+          params,
+          {
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+              Authorization: `Bearer ${this.accessToken}`,
+            },
+          }
+        )
         .then((res) => {
           // Swal.fire({
           //   icon: "success",

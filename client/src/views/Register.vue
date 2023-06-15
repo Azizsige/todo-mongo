@@ -173,7 +173,7 @@ const register = () => {
   params.append("confirmPassword", confirm_password.value);
 
   axios
-    .post("http://localhost:3000/api/auth/register", params, {
+    .post("https://todo-mongo-api-one.vercel.app/api/auth/register", params, {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
