@@ -197,8 +197,10 @@ onMounted(async () => {
             >
               <!-- Modal toggle -->
               <button
-                class="block text-white"
-                @click="getFormUpdate(item.title, item.description, item._id)"
+                class="block text-white text-center"
+                @click.stop.prevent="
+                  getFormUpdate(item.title, item.description, item._id)
+                "
                 type="button"
               >
                 <svg
@@ -229,7 +231,7 @@ onMounted(async () => {
                   <li>
                     <button
                       :id="item._id"
-                      @click.prevent="deleteTodo(item._id, $event)"
+                      @click.stop.prevent="deleteTodo(item._id, $event)"
                       href="#"
                       class="flex lg:w-full px-4 py-2 text-[18px] text-secondaryColor dark:hover:bg-gray-600 dark:hover:text-white"
                     >
