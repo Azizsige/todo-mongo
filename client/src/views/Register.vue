@@ -195,8 +195,6 @@ const register = () => {
       // looping object err
       for (let key in err) {
         let msg = err[key];
-        console.log(msg);
-        console.log(username.value);
         toast.error(msg.msg, {
           position: "top-right",
           timeout: 1500,

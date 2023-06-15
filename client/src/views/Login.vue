@@ -158,15 +158,33 @@ const login = () => {
       }
     })
     .catch((error) => {
-      Swal.close();
-      let err = error.response.data.errors;
-      console.log(err);
-      let length = Object.keys(err).length;
-      // looping object err
-      for (let key in err) {
-        let msg = err[key];
-        console.log(msg);
-        toast.error(msg.msg, {
+      let errorValidation = error.response.data.errors;
+      let errorAuth = error.response.data.message;
+      console.log(errorValidation);
+      console.log(errorAuth);
+      if (errorValidation) {
+        let length = Object.keys(errorValidation).length;
+        // looping object err
+        for (let key in errorValidation) {
+          let msg = errorValidation[key];
+          console.log(msg);
+          toast.error(msg.msg, {
+            position: "top-right",
+            timeout: 3000,
+            closeOnClick: true,
+            pauseOnFocusLoss: true,
+            pauseOnHover: true,
+            draggable: true,
+            draggablePercent: 0.6,
+            showCloseButtonOnHover: false,
+            hideProgressBar: false,
+            closeButton: "button",
+            icon: true,
+            rtl: false,
+          });
+        }
+      } else {
+        toast.error(errorAuth, {
           position: "top-right",
           timeout: 3000,
           closeOnClick: true,
@@ -181,6 +199,7 @@ const login = () => {
           rtl: false,
         });
       }
+      Swal.close();
     });
 };
 

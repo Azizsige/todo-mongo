@@ -13,6 +13,9 @@ const title = ref("");
 const description = ref("");
 const showDeleteButton = ref(false);
 const showFormModal = ref(false);
+const checklist = ref(false);
+const selectedTodo = ref(null);
+const item = ref([]);
 
 const todoTitle = ref("");
 const todoDescription = ref("");
@@ -25,10 +28,12 @@ const todoLength = ref(null);
 
 const renderData = async () => {
   todoItems.value = await store.getData();
+  await renderLength();
 };
 
 const renderLength = async () => {
-  todoLength.value = await todoItems.length;
+  todoLength.value = await store.getTodoLength;
+  console.log(todoLength.value);
 };
 
 const toogleAddTodoForm = () => {
@@ -39,8 +44,8 @@ const toogleAddTodoForm = () => {
 const addTodo = async () => {
   store.testingStoreAction();
   await store.addTodoStore(description.value, title.value);
-  await renderData();
-  await toogleAddTodoForm();
+  renderData();
+  toogleAddTodoForm();
   title.value = "";
   description.value = "";
 };
@@ -55,16 +60,12 @@ const getFormUpdate = (title, description, id) => {
   showFormModal.value = !showFormModal.value;
 
   console.log(showFormModal.value);
-
-  // store.todoTitleStore = title;
-  // store.todoDescriptionStore = description;
 };
 
 const updateTodo = () => {
   store.updateTodoStore(todoId.value, todoDescription.value, todoTitle.value);
   renderData();
   showFormModal.value = !showFormModal.value;
-  // toogleAddTodoForm();
 };
 
 // get id property when click delete button use event.target.id
@@ -74,6 +75,10 @@ const deleteTodo = async (id, event) => {
   await renderLength();
 };
 
+const updateIsDone = async (id, isDone) => {
+  isDone = !isDone;
+  await store.updateIsDone(id, isDone);
+};
 onMounted(async () => {
   await renderData();
   await initFlowbite();
@@ -165,11 +170,17 @@ onMounted(async () => {
         v-for="item in todoItems"
         :key="item.id"
       >
-        <input type="checkbox" :id="item._id" />
+        <input :checked="item.isDone" type="checkbox" :id="item._id" />
         <label :for="item._id" class="flex items-center w-full">
           <div
             :id="item._id"
-            class="todo-content hover:bg-gray-100 hover:border-secondaryColor flex items-center ml-3 justify-between px-5 py-3 border border-[#E3E3E3] rounded-[8px] w-full"
+            @click="updateIsDone(item._id, item.isDone)"
+            :class="
+              item.isDone
+                ? 'bg-white'
+                : 'hover:bg-gray-100 flex items-center ml-3 justify-between px-5 py-3 border border-[#E3E3E3] rounded-[8px] w-full'
+            "
+            class="todo-content hover:bg-gray-100 flex items-center ml-3 justify-between px-5 py-3 border border-[#E3E3E3] rounded-[8px] w-full"
           >
             <div class="content--text">
               <div class="todo__title text-[24px]">
@@ -210,15 +221,15 @@ onMounted(async () => {
 
               <!-- Dropdown menu -->
               <div
-                class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600"
+                class="z-10 bg-white divide-y hover:border-secondaryColor hover:border-2 border-2 border-transparent divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600"
               >
                 <ul class="py-2 text-sm text-gray-700 dark:text-gray-200">
                   <li>
-                    <a
+                    <button
                       :id="item._id"
-                      @click="deleteTodo(item._id, $event)"
+                      @click.prevent="deleteTodo(item._id, $event)"
                       href="#"
-                      class="flex px-4 py-2 text-[18px] text-secondaryColor hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                      class="flex w-full px-4 py-2 text-[18px] text-secondaryColor dark:hover:bg-gray-600 dark:hover:text-white"
                     >
                       <svg
                         width="18"
@@ -241,8 +252,8 @@ onMounted(async () => {
                         </defs>
                       </svg>
 
-                      Delete</a
-                    >
+                      Delete
+                    </button>
                   </li>
                 </ul>
               </div>
@@ -448,6 +459,23 @@ onMounted(async () => {
   border: solid #ff4f5a;
   border-width: 0 2px 2px 0;
   transform: rotate(45deg);
+}
+
+.form-group input:checked + label div.todo-content {
+  border: 1px solid #ff4f5a;
+  opacity: 0.5;
+}
+
+div.todo-content.isDone {
+  border: 1px solid #ff4f5a;
+  opacity: 0.5;
+}
+
+.form-group input:checked + label .todo-content .content--action button.isDone {
+  cursor: not-allowed;
+}
+.form-group input:checked + label .todo-content .content--action div a.isDone {
+  cursor: not-allowed;
 }
 
 .showDeleteButton {

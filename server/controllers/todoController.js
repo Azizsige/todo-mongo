@@ -81,6 +81,35 @@ const updateTodo = async (req, res) => {
   }
 };
 
+// update todo isDone only
+const updateTodoIsDone = async (req, res) => {
+  try {
+    const todoId = req.params.id;
+    const { isDone } = req.body;
+
+    const updatedTodo = await Todo.findByIdAndUpdate(
+      todoId,
+      { isDone },
+      { new: true }
+    );
+
+    if (!updatedTodo) {
+      return res
+        .status(404)
+        .json({ status: "false", message: "Todo not found" });
+    }
+
+    res.status(200).json({
+      status: "true",
+      message: "Todo berhasil di Update",
+      todo: updatedTodo,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ status: "false", message: "Todo gagal diupdate" });
+  }
+};
+
 // delete todo
 const deleteTodo = async (req, res) => {
   try {
@@ -105,4 +134,5 @@ module.exports = {
   getCurrentUserTodos,
   updateTodo,
   deleteTodo,
+  updateTodoIsDone,
 };

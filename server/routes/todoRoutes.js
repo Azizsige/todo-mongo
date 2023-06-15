@@ -8,6 +8,11 @@ const { body } = require("express-validator");
 router.get("/", authMiddleware.authenticateToken, todoController.getTodos);
 router.post("/", authMiddleware.authenticateToken, todoController.createTodo);
 router.put("/:id", authMiddleware.authenticateToken, todoController.updateTodo);
+router.patch(
+  "/:id",
+  authMiddleware.authenticateToken,
+  todoController.updateTodoIsDone
+);
 router.delete(
   "/:id",
   authMiddleware.authenticateToken,

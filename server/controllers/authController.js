@@ -71,12 +71,19 @@ const login = async (req, res) => {
 
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(401).json({ message: "Invalid credentials" });
+      return res
+        .status(401)
+        .json({ status: "false", message: "Email belum terdaftart" });
     }
 
     const match = await bcrypt.compare(password, user.password);
     if (!match) {
-      return res.status(401).json({ message: "Invalid credentials" });
+      return res
+        .status(401)
+        .json({
+          status: "false",
+          message: "Password yang anda masukkan salah",
+        });
     }
 
     // Generate access token
@@ -93,15 +100,13 @@ const login = async (req, res) => {
     user.refreshToken = refreshToken;
     await user.save();
 
-    res
-      .status(200)
-      .json({
-        status: "true",
-        message: "Berhasil Login",
-        user,
-        accessToken,
-        expiresIn: "12h",
-      });
+    res.status(200).json({
+      status: "true",
+      message: "Berhasil Login",
+      user,
+      accessToken,
+      expiresIn: "12h",
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({
