@@ -10,6 +10,8 @@ import Service from "../views/Service.vue";
 import Sales from "../views/Sales.vue";
 import Webinar from "../views/Webinar.vue";
 
+import { useStore } from "./../stores/store.js";
+
 const routes = [
   {
     path: "/",
@@ -83,21 +85,19 @@ const router = createRouter({
 // if not found redirect to 404
 router.beforeEach((to, from, next) => {
   document.title = to.meta.title;
-  const menuItems = [
-    "Home",
-    "Service",
-    "Sales",
-    "Webinar",
-    "About",
-    "Contact",
-    "Register",
-    "Login",
-    "Dashboard",
-  ];
-  if (!menuItems.includes(to.name)) {
-    next({ name: "NotFound" });
+
+  const store = useStore();
+
+  if (
+    to.name !== "Login" &&
+    to.name !== "Register" &&
+    store.isUserLoggedIn !== true
+  ) {
+    next({ name: "Login" });
+  } else {
+    next();
   }
-  next();
+
   window.scrollTo(0, 0);
 });
 
