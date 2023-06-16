@@ -185,12 +185,14 @@ onMounted(async () => {
           >
             <div class="content--text">
               <div class="todo__title text-[24px]">
-                <h4>{{ item.title }}</h4>
+                <h4 v-if="item.title !== ''">{{ item.title }}</h4>
+                <h4 v-else class="text-gray-300">Title belum diatur</h4>
               </div>
               <div class="todo__description text-[#787878] text-[22px]">
-                <h5>
+                <h5 v-if="item.description !== ''">
                   {{ item.description }}
                 </h5>
+                <h5 v-else class="text-gray-300">Description belum diatur</h5>
               </div>
             </div>
             <div
@@ -360,38 +362,30 @@ onMounted(async () => {
             </svg>
             <span class="sr-only">Close modal</span>
           </button>
-          <div class="px-6 py-6 lg:px-8">
-            <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">
-              Sign in to our platform
+          <div class="px-6 py-6 lg:px-8 font-Roboto">
+            <h3
+              class="mb-10 text-3xl font-bold text-center text-secondaryColor dark:text-white"
+            >
+              From Update
             </h3>
             <form class="space-y-6" action="#">
               <div>
-                <label
-                  for="email"
-                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                  >Your email</label
-                >
                 <input
                   v-model="todoTitle"
                   name="email"
                   id="email"
-                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                  placeholder="name@company.com"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm lg:text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                  placeholder="Input your title"
                   required
                 />
               </div>
               <div>
-                <label
-                  for="password"
-                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                  >Your password</label
-                >
                 <input
                   v-model="todoDescription"
                   name="password"
                   id="password"
-                  placeholder="••••••••"
-                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                  placeholder="Input your description"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm lg:text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                   required
                 />
               </div>
@@ -399,18 +393,10 @@ onMounted(async () => {
               <button
                 type="submit"
                 @click.prevent="updateTodo"
-                class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                class="w-full text-white bg-secondaryColor focus:ring-4 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
               >
-                Login to your account
+                Update Todo
               </button>
-              <div class="text-sm font-medium text-gray-500 dark:text-gray-300">
-                Not registered?
-                <a
-                  href="#"
-                  class="text-blue-700 hover:underline dark:text-blue-500"
-                  >Create account</a
-                >
-              </div>
             </form>
           </div>
         </div>
