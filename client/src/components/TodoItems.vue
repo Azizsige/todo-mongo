@@ -33,7 +33,6 @@ const renderData = async () => {
 
 const renderLength = async () => {
   todoLength.value = await store.getTodoLength;
-  console.log(todoLength.value);
 };
 
 const toogleAddTodoForm = () => {
@@ -55,11 +54,7 @@ const getFormUpdate = (title, description, id) => {
   todoDescription.value = description;
   todoId.value = id;
 
-  console.log(todoTitle.value, todoDescription.value, todoId.value);
-
   showFormModal.value = !showFormModal.value;
-
-  console.log(showFormModal.value);
 };
 
 const updateTodo = () => {

@@ -72,15 +72,10 @@ export const useStore = defineStore("store", {
             icon: "success",
             title: `${res.data.message}`,
           });
-
-          // console.log(res.data);
           if (res.data.status) {
             description = "";
             title = "";
             this.getData();
-
-            // router.push("/");
-            console.log(res.data);
           }
         })
         .catch((err) => {
@@ -148,8 +143,6 @@ export const useStore = defineStore("store", {
           if (res.data.status) {
             description = "";
             title = "";
-            // router.push("/");
-            console.log(res.data);
           }
         })
         .catch((err) => {
@@ -157,16 +150,6 @@ export const useStore = defineStore("store", {
         });
     },
     async updateIsDone(id, isDone) {
-      console.log("huh");
-      console.log(id);
-      console.log(isDone);
-      // Swal.fire({
-      //   title: "Please Wait...",
-      //   allowOutsideClick: false,
-      //   didOpen: () => {
-      //     Swal.showLoading();
-      //   },
-      // });
       const params = new URLSearchParams();
       params.append("isDone", isDone);
       await axios
@@ -181,22 +164,13 @@ export const useStore = defineStore("store", {
           }
         )
         .then((res) => {
-          // Swal.fire({
-          //   icon: "success",
-          //   title: `${res.data.message}`,
-          // });
-          // console.log(res.data);
           if (res.data.status) {
             // router.push("/");
-            console.log(res.data);
           }
         })
         .catch((err) => {
           console.log(err);
         });
-    },
-    testingStoreAction() {
-      console.log("testing store action");
     },
   },
   persist: {
