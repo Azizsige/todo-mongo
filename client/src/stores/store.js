@@ -16,6 +16,8 @@ export const useStore = defineStore("store", {
     expiredAt: null,
     expiredAccessToken: null,
     expiredRefreshToken: null,
+    userNameStore: null,
+    userEmailStore: null,
     // data user
     dataUser: null,
 
@@ -33,27 +35,28 @@ export const useStore = defineStore("store", {
   actions: {
     async getData() {
       if (this.isUserLoggedIn === false) {
-        return null;
-      }
-      try {
-        const response = await axios.get(
-          "https://todo-mongo-api-one.vercel.app/api/users/me",
-          {
-            headers: {
-              Authorization: `Bearer ${this.refreshToken}`,
-            },
-          }
-        );
-        this.dataUser = response.data.user.todos;
-        return this.dataUser;
-      } catch (error) {
-        console.log(error);
-        return null;
+        return (this.dataUser = null);
+      } else {
+        try {
+          const response = await axios.get(
+            "https://todo-mongo-api-one.vercel.app/api/users/me",
+            {
+              headers: {
+                Authorization: `Bearer ${this.refreshToken}`,
+              },
+            }
+          );
+          this.dataUser = response.data.user.todos;
+          return this.dataUser;
+        } catch (error) {
+          console.log(error);
+          return null;
+        }
       }
     },
     async addTodoStore(description, title) {
       if (this.isUserLoggedIn === false) {
-        return null;
+        return (this.dataUser = null);
       }
       Swal.fire({
         title: "Please Wait...",
@@ -187,7 +190,7 @@ export const useStore = defineStore("store", {
       this.expiredAccessToken = null;
       this.expiredRefreshToken = null;
       this.user = null;
-      this.dataUser = null;
+      this.getData();
     },
   },
   persist: {
@@ -198,6 +201,8 @@ export const useStore = defineStore("store", {
       "expiredAccessToken",
       "expiredRefreshToken",
       "expiredAt",
+      "userNameStore",
+      "userEmailStore",
     ],
   },
 });

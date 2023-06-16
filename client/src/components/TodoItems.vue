@@ -78,7 +78,6 @@ const updateIsDone = async (id, isDone) => {
 };
 
 watchEffect(() => {
-  renderData();
   renderLength();
 });
 

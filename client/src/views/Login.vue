@@ -139,10 +139,14 @@ const login = () => {
         let accessToken = res.data.accessToken;
         let refreshToken = res.data.user.refreshToken;
         let expiredAt = res.data.user.updatedAt;
+        let userName = res.data.user.username;
+        let userEmail = res.data.user.email;
         store.accessToken = accessToken;
         store.refreshToken = refreshToken;
         store.expiredAt = expiredAt;
         store.isUserLoggedIn = true;
+        store.userNameStore = userName;
+        store.userEmailStore = userEmail;
         Swal.fire({
           icon: "success",
           title: `${res.data.message}`,
@@ -204,6 +208,7 @@ const login = () => {
 };
 
 onMounted(() => {
+  store.dataUser = null;
   if (store.isUserLoggedIn) {
     router.push("/dashboard");
   }
