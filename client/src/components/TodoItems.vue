@@ -1,6 +1,6 @@
 <script setup>
 import { useStore } from "./../stores/store.js";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed, watchEffect } from "vue";
 import { initFlowbite } from "flowbite";
 
 import Swal from "sweetalert2";
@@ -23,12 +23,12 @@ const todoId = ref("");
 
 const store = useStore();
 
-const todoItems = ref([]);
+const todoItems = computed(() => store.dataUser);
 const todoLength = ref(null);
 
 const renderData = async () => {
-  todoItems.value = await store.getData();
-  await renderLength();
+  await store.getData();
+  renderLength();
 };
 
 const renderLength = async () => {
@@ -70,18 +70,25 @@ const updateTodo = () => {
 
 // get id property when click delete button use event.target.id
 const deleteTodo = async (id, event) => {
-  await store.deleteTodo(id);
-  await renderData();
-  await renderLength();
+  store.deleteTodo(id);
+  renderData();
+  renderLength();
 };
 
 const updateIsDone = async (id, isDone) => {
   isDone = !isDone;
   await store.updateIsDone(id, isDone);
 };
+
+watchEffect(() => {
+  renderData();
+  renderLength();
+});
+
 onMounted(async () => {
   await renderData();
   await initFlowbite();
+  renderLength();
   // console.log(todoItems.value);
 });
 </script>
@@ -89,7 +96,7 @@ onMounted(async () => {
 <template>
   <div class="heading">
     <h1 class="text-[48px] text-secondaryColor font-bold">Today</h1>
-    <p class="text-[#414141] text-[18px]">4/{{ todoItems.length }} completed</p>
+    <p class="text-[#414141] text-[18px]">4/{{ todoLength }} completed</p>
   </div>
 
   <div v-if="todoLength == 0" class="mt-10 list-todo">
@@ -193,11 +200,11 @@ onMounted(async () => {
               </div>
             </div>
             <div
-              class="flex w-full justify-between items-center lg:w-auto lg:space-x-3 content--action"
+              class="flex items-center justify-between w-full lg:w-auto lg:space-x-3 content--action"
             >
               <!-- Modal toggle -->
               <button
-                class="block text-white text-center"
+                class="block text-center text-white"
                 @click.stop.prevent="
                   getFormUpdate(item.title, item.description, item._id)
                 "
@@ -225,7 +232,7 @@ onMounted(async () => {
 
               <!-- Dropdown menu -->
               <div
-                class="z-10 bg-white divide-y hover:border-secondaryColor hover:border-2 border-2 border-transparent divide-gray-100 rounded-lg shadow lg:w-44 dark:bg-gray-700 dark:divide-gray-600"
+                class="z-10 bg-white border-2 border-transparent divide-y divide-gray-100 rounded-lg shadow hover:border-secondaryColor hover:border-2 lg:w-44 dark:bg-gray-700 dark:divide-gray-600"
               >
                 <ul class="py-2 text-sm text-gray-700 dark:text-gray-200">
                   <li>

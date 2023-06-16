@@ -26,7 +26,7 @@ export const useStore = defineStore("store", {
   }),
   getters: {
     async getTodoLength() {
-      return await this.dataUser.length;
+      return this.dataUser.length;
     },
   },
   actions: {
@@ -77,6 +77,8 @@ export const useStore = defineStore("store", {
           if (res.data.status) {
             description = "";
             title = "";
+            this.getData();
+
             // router.push("/");
             console.log(res.data);
           }
@@ -94,7 +96,7 @@ export const useStore = defineStore("store", {
             Swal.showLoading();
           },
         });
-        axios
+        return axios
           .delete(`https://todo-mongo-api-one.vercel.app/api/todos/${id}`, {
             headers: {
               Authorization: `Bearer ${this.accessToken}`,
@@ -106,6 +108,8 @@ export const useStore = defineStore("store", {
               title: `${res.data.message}`,
             });
             console.log(res.data);
+            this.getData();
+            this.getTodoLength();
           })
           .catch((err) => {
             console.log(err);
