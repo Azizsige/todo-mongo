@@ -41,7 +41,6 @@ const toogleAddTodoForm = () => {
 };
 
 const addTodo = async () => {
-  store.testingStoreAction();
   await store.addTodoStore(description.value, title.value);
   renderData();
   toogleAddTodoForm();
