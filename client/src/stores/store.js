@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import axios from "axios";
+import { useRouter } from "vue-router";
 
 import Swal from "sweetalert2";
 
@@ -31,6 +32,9 @@ export const useStore = defineStore("store", {
   },
   actions: {
     async getData() {
+      if (this.isUserLoggedIn === false) {
+        return null;
+      }
       try {
         const response = await axios.get(
           "https://todo-mongo-api-one.vercel.app/api/users/me",
@@ -48,6 +52,9 @@ export const useStore = defineStore("store", {
       }
     },
     async addTodoStore(description, title) {
+      if (this.isUserLoggedIn === false) {
+        return null;
+      }
       Swal.fire({
         title: "Please Wait...",
         allowOutsideClick: false,
@@ -102,7 +109,7 @@ export const useStore = defineStore("store", {
               icon: "success",
               title: `${res.data.message}`,
             });
-            console.log(res.data);
+            // console.log(res.data);
             this.getData();
             this.getTodoLength();
           })
@@ -171,6 +178,16 @@ export const useStore = defineStore("store", {
         .catch((err) => {
           console.log(err);
         });
+    },
+    logout() {
+      this.isUserLoggedIn = false;
+      this.accessToken = null;
+      this.refreshToken = null;
+      this.expiredAt = null;
+      this.expiredAccessToken = null;
+      this.expiredRefreshToken = null;
+      this.user = null;
+      this.dataUser = null;
     },
   },
   persist: {

@@ -25,6 +25,7 @@ const store = useStore();
 
 const todoItems = computed(() => store.dataUser);
 const todoLength = ref(null);
+const completedTodoLength = ref(0);
 
 const renderData = async () => {
   await store.getData();
@@ -32,7 +33,9 @@ const renderData = async () => {
 };
 
 const renderLength = async () => {
+  const todos = await store.dataUser;
   todoLength.value = await store.getTodoLength;
+  completedTodoLength.value = todos.filter((todo) => todo.isDone).length;
 };
 
 const toogleAddTodoForm = () => {
@@ -90,7 +93,9 @@ onMounted(async () => {
 <template>
   <div class="heading">
     <h1 class="text-[48px] text-secondaryColor font-bold">Today</h1>
-    <p class="text-[#414141] text-[18px]">4/{{ todoLength }} completed</p>
+    <p class="text-[#414141] text-[18px]">
+      {{ completedTodoLength }} /{{ todoLength }} completed
+    </p>
   </div>
 
   <div v-if="todoLength == 0" class="mt-10 list-todo">
@@ -454,7 +459,7 @@ onMounted(async () => {
 
 .form-group input:checked + label div.todo-content {
   border: 1px solid #ff4f5a;
-  opacity: 0.5;
+  opacity: 0.7;
 }
 
 div.todo-content.isDone {

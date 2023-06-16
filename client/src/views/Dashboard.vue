@@ -98,6 +98,7 @@
                 </li>
                 <li>
                   <a
+                    @click="logout"
                     href="#"
                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
                     role="menuitem"
@@ -358,21 +359,10 @@ const getExpired = () => {
   }
 };
 
-// get user data from api with axios header token
-// const users = async () => {
-//   axios
-//     .get("http://localhost:3000/api/users/me", {
-//       headers: {
-//         Authorization: `Bearer ${store.refreshToken}`,
-//       },
-//     })
-//     .then((response) => {
-//       console.log(response.data);
-//     })
-//     .catch((error) => {
-//       console.log(error);
-//     });
-// };
+const logout = () => {
+  store.logout();
+  router.push("/login");
+};
 
 onMounted(() => {
   if (store.isUserLoggedIn) {
