@@ -22,14 +22,14 @@
               <label
                 for="email"
                 class="block mb-2 text-lg font-bold text-gray-900 dark:text-white"
-                >Email :
+                >Username or Email :
               </label>
               <input
                 type="email"
                 v-model="email"
                 id="email"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-md rounded-lg focus:ring-secondaryColor focus:border-secondaryColor block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Your Email"
+                placeholder="username or email"
                 required
               />
             </div>
@@ -124,7 +124,7 @@ const login = () => {
 
   const params = new URLSearchParams();
 
-  params.append("email", email.value);
+  params.append("identifier", email.value);
   params.append("password", password.value);
 
   axios
