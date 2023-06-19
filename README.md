@@ -131,6 +131,6 @@ Terima kasih atas kontribusi Anda!
 
 ## Lisensi
 
-Aplikasi ini dilisensikan di bawah [MIT License](). Silahkan baca [LICENSE]() untuk informasi lebih lanjut.
+Aplikasi ini dilisensikan di bawah [MIT License](https://github.com/Azizsige/todo-mongo/blob/master/LICENSE). Silahkan baca [LICENSE](https://github.com/Azizsige/todo-mongo/blob/master/LICENSE) untuk informasi lebih lanjut.
 
 Terima kasih!
