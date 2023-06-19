@@ -31,6 +31,10 @@ export const useStore = defineStore("store", {
     async getTodoLength() {
       return this.dataUser.length;
     },
+
+    async getIsDoneLength() {
+      return this.dataUser.filter((todo) => todo.isDone === true).length;
+    },
   },
   actions: {
     async getData() {
@@ -86,6 +90,7 @@ export const useStore = defineStore("store", {
             description = "";
             title = "";
             this.getData();
+            this.getTodoLength;
           }
         })
         .catch((err) => {
@@ -114,7 +119,7 @@ export const useStore = defineStore("store", {
             });
             // console.log(res.data);
             this.getData();
-            this.getTodoLength();
+            this.getTodoLength;
           })
           .catch((err) => {
             console.log(err);
@@ -153,6 +158,8 @@ export const useStore = defineStore("store", {
           if (res.data.status) {
             description = "";
             title = "";
+            this.getData();
+            this.getTodoLength;
           }
         })
         .catch((err) => {
@@ -176,6 +183,8 @@ export const useStore = defineStore("store", {
         .then((res) => {
           if (res.data.status) {
             // router.push("/");
+            this.getData();
+            this.getTodoLength;
           }
         })
         .catch((err) => {

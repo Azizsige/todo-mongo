@@ -91,6 +91,7 @@ router.beforeEach((to, from, next) => {
   if (
     to.name !== "Login" &&
     to.name !== "Register" &&
+    to.name !== "Home" &&
     store.isUserLoggedIn !== true
   ) {
     next({ name: "Login" });
