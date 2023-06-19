@@ -9,10 +9,15 @@ Aplikasi Todo List adalah sebuah aplikasi sederhana yang memungkinkan pengguna u
 
 ## Library yang Digunakan
 
-- [axios]()
-- [vue-router]()
-- [pinia]()
-- [vue-toastification]()
+- [axios](https://axios-http.com/docs/intro)
+- [vue-router](https://router.vuejs.org/)
+- [pinia](https://pinia.vuejs.org/)
+- [pinia-plugin-persistedstate](https://prazdevs.github.io/pinia-plugin-persistedstate/)
+- [vue-toastification](https://vue-toastification.maronato.dev/)
+- [vue-sweetalert2](https://sweetalert2.github.io/)
+- [@vueuse/motion](https://motion.vueuse.org/)
+- [flowbite](https://flowbite.com/)
+- [preline](https://preline.co/)
 
 ## Todo
 
@@ -34,11 +39,21 @@ Aplikasi Todo List adalah sebuah aplikasi sederhana yang memungkinkan pengguna u
 
 <!-- image -->
 
-![Tampilan Aplikasi](https://user-images.githubusercontent.com/60083941/134768543-1b0b9b0a-2b9a-4b9a-9b0a-9b0b9b0a2b9a.png)
+### Home
+
+![Tampilan Aplikasi](https://github.com/Azizsige/todo-mongo/blob/master/public/img/home.png?raw=true)
+
+### Login
+
+![Tampilan Aplikasi](https://github.com/Azizsige/todo-mongo/blob/master/public/img/login.png?raw=true)
+
+### Register
+
+![Tampilan Aplikasi](https://github.com/Azizsige/todo-mongo/blob/master/public/img/register.png?raw=true)
 
 <!-- link live preview -->
 
-[Live Preview](https://todo-list-app-frontend.herokuapp.com/)
+[Live Preview](https://todo-mongo.vercel.app/)
 
 ## Fitur
 
