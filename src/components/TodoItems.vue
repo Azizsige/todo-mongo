@@ -182,18 +182,20 @@ onMounted(async () => {
             @click="updateIsDone(item._id, item.isDone)"
             :class="
               item.isDone
-                ? 'bg-white line-through'
-                : 'hover:bg-gray-100 flex no-underline lg:items-center ml-3 justify-between px-5 py-3 border border-[#E3E3E3] rounded-[8px] w-full'
+                ? 'bg-secondaryColor'
+                : 'hover:bg-gray-100 flex lg:items-center ml-3 justify-between px-5 py-3 border border-[#E3E3E3] rounded-[8px] w-full'
             "
-            class="todo-content hover:bg-gray-100 flex flex-col items-start lg:flex-row lg:items-center ml-3 justify-between px-5 py-3 border border-[#E3E3E3] rounded-[8px] w-[70vw] lg:w-full"
+            class="todo-content bg-white hover:bg-gray-100 flex flex-col items-start lg:flex-row lg:items-center ml-3 justify-between px-5 py-3 border border-[#E3E3E3] rounded-[8px] w-full lg:w-full"
           >
             <div class="content--text">
               <div class="todo__title text-[24px]">
-                <h4 v-if="item.title !== ''">{{ item.title }}</h4>
+                <h4 v-if="item.title !== ''">
+                  {{ item.title }}
+                </h4>
                 <h4 v-else class="text-gray-300">Title belum diatur</h4>
               </div>
               <div class="todo__description text-[#787878] text-[22px]">
-                <h5 v-if="item.description !== ''">
+                <h5 v-if="item.description !== ''" class="text-gray-400">
                   {{ item.description }}
                 </h5>
                 <h5 v-else class="text-gray-300">Description belum diatur</h5>
@@ -429,36 +431,30 @@ onMounted(async () => {
 }
 
 .form-group label:before {
-  content: "";
-  -webkit-appearance: none;
-  background-color: #eaeaea;
-  border-radius: 50px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05),
-    inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05);
-  padding: 10px;
-  display: inline-block;
-  position: relative;
-  vertical-align: middle;
-  cursor: pointer;
-  margin-right: 5px;
+  display: none;
 }
 
 .form-group input:checked + label:after {
-  content: "";
-  display: block;
-  position: absolute;
-  top: 62px;
-  left: 9px;
-  width: 9px;
-  height: 17px;
-  border: solid #ff4f5a;
-  border-width: 0 2px 2px 0;
-  transform: rotate(45deg);
+  display: none;
 }
 
 .form-group input:checked + label div.todo-content {
   border: 1px solid #ff4f5a;
-  opacity: 0.7;
+  color: black;
+
+  background-color: #ff4f5a;
+}
+
+.form-group input:checked + label div.todo-content .content--text {
+  text-decoration: line-through;
+}
+
+.form-group input:checked + label div.todo-content .todo__title {
+  color: white;
+}
+
+label div.todo-content .todo__title {
+  color: black;
 }
 
 div.todo-content.isDone {
@@ -486,6 +482,24 @@ div.todo-content.isDone {
 }
 
 @media (min-width: 640px) {
+}
+@media (min-width: 1024px) {
+  .form-group label:before {
+    content: "";
+    -webkit-appearance: none;
+    background-color: #eaeaea;
+    border-radius: 50px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05),
+      inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05);
+    padding: 10px;
+    display: inline-block;
+    position: relative;
+    vertical-align: middle;
+    cursor: pointer;
+    margin-right: 5px;
+    display: block;
+  }
+
   .form-group input:checked + label:after {
     content: "";
     display: block;
@@ -497,9 +511,9 @@ div.todo-content.isDone {
     border: solid #ff4f5a;
     border-width: 0 2px 2px 0;
     transform: rotate(45deg);
+    display: block;
   }
-}
-@media (min-width: 1024px) {
+
   .form-group input:checked + label:after {
     content: "";
     display: block;
