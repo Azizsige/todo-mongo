@@ -44,6 +44,7 @@ export const useStore = defineStore("store", {
   },
   actions: {
     async getData() {
+      const getCurrentCookie = await cookies.get("refreshToken");
       if (this.isUserLoggedIn === false) {
         return (this.dataUser = null);
       } else {
@@ -52,7 +53,7 @@ export const useStore = defineStore("store", {
             "https://todo-mongo-api-one.vercel.app/api/users/me",
             {
               headers: {
-                Authorization: `Bearer ${getCookie}`,
+                Authorization: `Bearer ${getCurrentCookie}`,
               },
               withCredentials: true,
             }

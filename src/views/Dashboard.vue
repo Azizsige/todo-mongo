@@ -367,7 +367,7 @@ const getExpired = () => {
 const logout = async () => {
   await cookies.remove("refreshToken");
 
-  this.isUserLoggedIn = false;
+  store.isUserLoggedIn = false;
 };
 
 onMounted(async () => {
