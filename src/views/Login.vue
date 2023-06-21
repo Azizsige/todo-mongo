@@ -89,21 +89,30 @@
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import axios from "axios";
-
 import { useStore } from "./../stores/store.js";
-
 import { useToast } from "vue-toastification";
+import { useCookies } from "vue3-cookies";
 import Swal from "sweetalert2";
 
 const toast = useToast();
 const router = useRouter();
 const store = useStore();
+const { cookies } = useCookies();
+
+const getCookie = cookies.get("refreshToken");
 
 const showPassword = ref(false);
 const showConfirmPassword = ref(false);
 const confirm_password = ref("");
 const password = ref("");
 const email = ref("");
+
+const setAuthTokenCookie = (refreshToken) => {
+  cookies.set("refreshToken", refreshToken);
+
+  const getCookie = cookies.get("refreshToken");
+  console.log(getCookie);
+};
 
 const togglePassword = () => {
   showPassword.value = !showPassword.value;
@@ -141,8 +150,8 @@ const login = () => {
         let expiredAt = res.data.user.updatedAt;
         let userName = res.data.user.username;
         let userEmail = res.data.user.email;
-        store.accessToken = accessToken;
-        store.refreshToken = refreshToken;
+        // store.accessToken = accessToken;
+        // store.refreshToken = refreshToken;
         store.expiredAt = expiredAt;
         store.isUserLoggedIn = true;
         store.userNameStore = userName;
@@ -152,6 +161,7 @@ const login = () => {
           title: `${res.data.message}`,
         });
         router.push("/dashboard");
+        setAuthTokenCookie(refreshToken);
       } else {
         // store.isUserLoggedIn = false;
         // store.userToken = null;
@@ -209,7 +219,7 @@ const login = () => {
 
 onMounted(() => {
   store.dataUser = null;
-  if (store.isUserLoggedIn) {
+  if (store.isUserLoggedIn && getCookie) {
     router.push("/dashboard");
   }
 });

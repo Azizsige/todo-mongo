@@ -2,7 +2,13 @@ import { defineStore } from "pinia";
 import axios from "axios";
 import { useRouter } from "vue-router";
 
+import { useCookies } from "vue3-cookies";
+const { cookies } = useCookies();
+const getCookie = cookies.get("refreshToken");
+
 import Swal from "sweetalert2";
+
+const router = useRouter();
 
 export const useStore = defineStore("store", {
   state: () => ({
@@ -46,8 +52,9 @@ export const useStore = defineStore("store", {
             "https://todo-mongo-api-one.vercel.app/api/users/me",
             {
               headers: {
-                Authorization: `Bearer ${this.refreshToken}`,
+                Authorization: `Bearer ${getCookie}`,
               },
+              withCredentials: true,
             }
           );
           this.dataUser = response.data.user.todos;
@@ -78,7 +85,7 @@ export const useStore = defineStore("store", {
         .post("https://todo-mongo-api-one.vercel.app/api/todos/", params, {
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
-            Authorization: `Bearer ${this.accessToken}`,
+            Authorization: `Bearer ${getCookie}`,
           },
         })
         .then((res) => {
@@ -109,7 +116,7 @@ export const useStore = defineStore("store", {
         return axios
           .delete(`https://todo-mongo-api-one.vercel.app/api/todos/${id}`, {
             headers: {
-              Authorization: `Bearer ${this.accessToken}`,
+              Authorization: `Bearer ${getCookie}`,
             },
           })
           .then((res) => {
@@ -145,7 +152,7 @@ export const useStore = defineStore("store", {
         .put(`https://todo-mongo-api-one.vercel.app/api/todos/${id}`, params, {
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
-            Authorization: `Bearer ${this.accessToken}`,
+            Authorization: `Bearer ${getCookie}`,
           },
         })
         .then((res) => {
@@ -176,7 +183,7 @@ export const useStore = defineStore("store", {
           {
             headers: {
               "Content-Type": "application/x-www-form-urlencoded",
-              Authorization: `Bearer ${this.accessToken}`,
+              Authorization: `Bearer ${getCookie}`,
             },
           }
         )
@@ -192,21 +199,16 @@ export const useStore = defineStore("store", {
         });
     },
     logout() {
+      cookies.remove("refreshToken");
+
       this.isUserLoggedIn = false;
-      this.accessToken = null;
-      this.refreshToken = null;
-      this.expiredAt = null;
-      this.expiredAccessToken = null;
-      this.expiredRefreshToken = null;
-      this.user = null;
-      this.getData();
     },
   },
   persist: {
     paths: [
       "isUserLoggedIn",
-      "accessToken",
-      "refreshToken",
+      // "accessToken",
+      // "refreshToken",
       "expiredAccessToken",
       "expiredRefreshToken",
       "expiredAt",

@@ -10,6 +10,8 @@ import Service from "../views/Service.vue";
 import Sales from "../views/Sales.vue";
 import Webinar from "../views/Webinar.vue";
 
+import { useCookies } from "vue3-cookies";
+
 import { useStore } from "./../stores/store.js";
 
 const routes = [
@@ -83,16 +85,20 @@ const router = createRouter({
 });
 
 // if not found redirect to 404
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   document.title = to.meta.title;
 
   const store = useStore();
+  const { cookies } = useCookies();
+
+  // Cek apakah token tersedia dalam cookie
+  const token = await cookies.get("refreshToken");
 
   if (
     to.name !== "Login" &&
     to.name !== "Register" &&
     to.name !== "Home" &&
-    store.isUserLoggedIn !== true
+    !token
   ) {
     next({ name: "Login" });
   } else {

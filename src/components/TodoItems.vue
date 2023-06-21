@@ -182,8 +182,8 @@ onMounted(async () => {
             @click="updateIsDone(item._id, item.isDone)"
             :class="
               item.isDone
-                ? 'bg-white'
-                : 'hover:bg-gray-100 flex lg:items-center ml-3 justify-between px-5 py-3 border border-[#E3E3E3] rounded-[8px] w-full'
+                ? 'bg-white line-through'
+                : 'hover:bg-gray-100 flex no-underline lg:items-center ml-3 justify-between px-5 py-3 border border-[#E3E3E3] rounded-[8px] w-full'
             "
             class="todo-content hover:bg-gray-100 flex flex-col items-start lg:flex-row lg:items-center ml-3 justify-between px-5 py-3 border border-[#E3E3E3] rounded-[8px] w-[70vw] lg:w-full"
           >

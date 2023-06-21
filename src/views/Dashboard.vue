@@ -62,13 +62,13 @@
             >
               <div class="px-4 py-3" role="none">
                 <p
-                  class="text-sm lg:text-lg font-bold text-gray-900 dark:text-white"
+                  class="text-sm font-bold text-gray-900 lg:text-lg dark:text-white"
                   role="none"
                 >
                   {{ store.userNameStore }}
                 </p>
                 <p
-                  class="text-sm lg:text-md font-medium text-gray-900 truncate dark:text-gray-300"
+                  class="text-sm font-medium text-gray-900 truncate lg:text-md dark:text-gray-300"
                   role="none"
                 >
                   {{ store.userEmailStore }}
@@ -294,7 +294,9 @@ import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 
 import { useStore } from "./../stores/store.js";
-
+import { useCookies } from "vue3-cookies";
+const { cookies } = useCookies();
+const getCookie = cookies.get("refreshToken");
 import axios from "axios";
 
 const router = useRouter();
@@ -362,17 +364,20 @@ const getExpired = () => {
   }
 };
 
-const logout = () => {
-  store.logout();
-  router.push("/login");
+const logout = async () => {
+  await cookies.remove("refreshToken");
+
+  this.isUserLoggedIn = false;
 };
 
-onMounted(() => {
-  if (store.isUserLoggedIn) {
+onMounted(async () => {
+  if (store.isUserLoggedIn && getCookie) {
     router.push("/dashboard");
-    store.getData;
+    await store.getData();
+    console.log("Token Valid");
   } else {
     router.push("/login");
+    console.log("Token Invalid");
   }
 
   getExpired();
