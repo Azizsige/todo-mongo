@@ -67,6 +67,7 @@ export const useStore = defineStore("store", {
       }
     },
     async addTodoStore(description, title) {
+      const getCurrentCookie = await cookies.get("refreshToken");
       if (this.isUserLoggedIn === false) {
         return (this.dataUser = null);
       }
@@ -86,7 +87,7 @@ export const useStore = defineStore("store", {
         .post("https://todo-mongo-api-one.vercel.app/api/todos/", params, {
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
-            Authorization: `Bearer ${getCookie}`,
+            Authorization: `Bearer ${getCurrentCookie}`,
           },
         })
         .then((res) => {
@@ -106,6 +107,7 @@ export const useStore = defineStore("store", {
         });
     },
     deleteTodo(id) {
+      const getCurrentCookie = cookies.get("refreshToken");
       try {
         Swal.fire({
           title: "Please Wait...",
@@ -117,7 +119,7 @@ export const useStore = defineStore("store", {
         return axios
           .delete(`https://todo-mongo-api-one.vercel.app/api/todos/${id}`, {
             headers: {
-              Authorization: `Bearer ${getCookie}`,
+              Authorization: `Bearer ${getCurrentCookie}`,
             },
           })
           .then((res) => {
@@ -137,6 +139,7 @@ export const useStore = defineStore("store", {
       }
     },
     async updateTodoStore(id, description, title) {
+      const getCurrentCookie = await cookies.get("refreshToken");
       Swal.fire({
         title: "Please Wait...",
         allowOutsideClick: false,
@@ -153,7 +156,7 @@ export const useStore = defineStore("store", {
         .put(`https://todo-mongo-api-one.vercel.app/api/todos/${id}`, params, {
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
-            Authorization: `Bearer ${getCookie}`,
+            Authorization: `Bearer ${getCurrentCookie}`,
           },
         })
         .then((res) => {
@@ -175,6 +178,7 @@ export const useStore = defineStore("store", {
         });
     },
     async updateIsDone(id, isDone) {
+      const getCurrentCookie = await cookies.get("refreshToken");
       const params = new URLSearchParams();
       params.append("isDone", isDone);
       await axios
@@ -184,7 +188,7 @@ export const useStore = defineStore("store", {
           {
             headers: {
               "Content-Type": "application/x-www-form-urlencoded",
-              Authorization: `Bearer ${getCookie}`,
+              Authorization: `Bearer ${getCurrentCookie}`,
             },
           }
         )
