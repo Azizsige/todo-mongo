@@ -141,7 +141,7 @@ const login = () => {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
-      withCredentials: true,
+      // withCredentials: true,
     })
     .then((res) => {
       if (res.data.status) {

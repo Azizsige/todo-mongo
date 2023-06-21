@@ -55,7 +55,7 @@ export const useStore = defineStore("store", {
               headers: {
                 Authorization: `Bearer ${getCurrentCookie}`,
               },
-              withCredentials: true,
+              // withCredentials: true,
             }
           );
           this.dataUser = response.data.user.todos;
