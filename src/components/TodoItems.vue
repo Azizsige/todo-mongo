@@ -77,6 +77,30 @@ const updateIsDone = async (id, isDone) => {
   await store.updateIsDone(id, isDone);
 };
 
+const formatDate = (date) => {
+  const create = new Date(date);
+  const options = {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  };
+
+  return create.toLocaleDateString("id-ID", options);
+};
+const formatTime = (date) => {
+  const create = new Date(date);
+  const options = {
+    hour: "numeric",
+    minute: "numeric",
+  };
+
+  const timeString = create.toLocaleTimeString("id-ID", options);
+  const formattedTime = `Pukul ${timeString}`;
+
+  return formattedTime;
+};
+
 watchEffect(() => {
   renderLength();
 });
@@ -187,18 +211,36 @@ onMounted(async () => {
             "
             class="todo-content bg-white hover:bg-gray-100 flex flex-col items-start lg:flex-row lg:items-center ml-3 justify-between px-5 py-3 border border-[#E3E3E3] rounded-[8px] w-full lg:w-full"
           >
-            <div class="content--text">
-              <div class="todo__title text-[24px]">
-                <h4 v-if="item.title !== ''">
-                  {{ item.title }}
-                </h4>
-                <h4 v-else class="text-gray-300">Title belum diatur</h4>
+            <div
+              class="flex flex-col justify-between w-full sm:items-center md:flex-row lg:flex-col content--text lg:items-start"
+            >
+              <div class="text__todo">
+                <div class="todo__title text-[24px]">
+                  <h4 v-if="item.title !== ''">
+                    {{ item.title }}
+                  </h4>
+                  <h4 v-else class="text-gray-300">Title belum diatur</h4>
+                </div>
+                <div class="todo__description text-[#787878] text-[22px]">
+                  <h5 v-if="item.description !== ''" class="text-gray-400">
+                    {{ item.description }}
+                  </h5>
+                  <h5 v-else class="text-gray-300">Description belum diatur</h5>
+                </div>
               </div>
-              <div class="todo__description text-[#787878] text-[22px]">
-                <h5 v-if="item.description !== ''" class="text-gray-400">
-                  {{ item.description }}
-                </h5>
-                <h5 v-else class="text-gray-300">Description belum diatur</h5>
+              <div class="mt-5 md:text-right sm:mt-0 text__create">
+                <div class="create__date text-[#787878] text-[16px] underline">
+                  <h5 class="text-gray-400">
+                    {{ formatDate(item.createdAt) }}
+                  </h5>
+                </div>
+                <div
+                  class="create__time text-[#787878] text-[16px] underline text-left sm:text-right md:text-left"
+                >
+                  <h5 class="text-gray-400">
+                    {{ formatTime(item.createdAt) }}
+                  </h5>
+                </div>
               </div>
             </div>
             <div
@@ -445,7 +487,7 @@ onMounted(async () => {
   background-color: #ff4f5a;
 }
 
-.form-group input:checked + label div.todo-content .content--text {
+.form-group input:checked + label div.todo-content .content--text .text__todo {
   text-decoration: line-through;
 }
 
