@@ -79,7 +79,6 @@ export const useStore = defineStore("store", {
       }
     },
     async addTodoStore(description, title) {
-      const getCurrentCookie = await cookies.get("accessToken");
       if (this.isUserLoggedIn === false) {
         return (this.dataUser = null);
       }
@@ -119,7 +118,6 @@ export const useStore = defineStore("store", {
         });
     },
     deleteTodo(id) {
-      const getCurrentCookie = cookies.get("accessToken");
       try {
         Swal.fire({
           title: "Please Wait...",
@@ -151,7 +149,6 @@ export const useStore = defineStore("store", {
       }
     },
     async updateTodoStore(id, description, title) {
-      const getCurrentCookie = await cookies.get("accessToken");
       Swal.fire({
         title: "Please Wait...",
         allowOutsideClick: false,
@@ -190,7 +187,6 @@ export const useStore = defineStore("store", {
         });
     },
     async updateIsDone(id, isDone) {
-      const getCurrentCookie = await cookies.get("accessToken");
       const params = new URLSearchParams();
       params.append("isDone", isDone);
       await axios

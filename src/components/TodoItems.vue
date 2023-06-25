@@ -22,6 +22,7 @@ const todoDescription = ref("");
 const todoId = ref("");
 
 const store = useStore();
+const loading = ref(false);
 
 const todoItems = computed(() => store.dataUser);
 const todoLength = ref(null);
@@ -30,6 +31,7 @@ const completedTodoLength = ref(0);
 const renderData = async () => {
   await store.getData();
   renderLength();
+  loading.value = true;
 };
 
 const renderLength = async () => {
@@ -193,6 +195,23 @@ onMounted(async () => {
     </button>
   </div>
   <div class="mt-10 list-todo" v-else>
+    <div
+      role="status"
+      :class="loading ? 'hidden' : 'block'"
+      class="w-full animate-pulse flex flex-col space-y-5"
+    >
+      <div
+        class="todo-content bg-gray-200 hover:bg-gray-100 flex flex-col items-start h-32 lg:flex-row lg:items-center justify-between px-5 py-3 border border-[#E3E3E3] rounded-[8px] w-full lg:w-full"
+      ></div>
+      <div
+        class="todo-content bg-gray-200 hover:bg-gray-100 flex flex-col items-start h-32 lg:flex-row lg:items-center justify-between px-5 py-3 border border-[#E3E3E3] rounded-[8px] w-full lg:w-full"
+      ></div>
+      <div
+        class="todo-content bg-gray-200 hover:bg-gray-100 flex flex-col items-start h-32 lg:flex-row lg:items-center justify-between px-5 py-3 border border-[#E3E3E3] rounded-[8px] w-full lg:w-full"
+      ></div>
+      <span class="sr-only">Loading...</span>
+    </div>
+
     <form action="" class="w-full">
       <div
         class="flex items-center form-group"
