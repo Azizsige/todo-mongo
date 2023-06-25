@@ -92,13 +92,13 @@ router.beforeEach(async (to, from, next) => {
   const { cookies } = useCookies();
 
   // Cek apakah token tersedia dalam cookie
-  const token = await cookies.get("refreshToken");
+  const token = await cookies.get("accessToken");
 
   if (
     to.name !== "Login" &&
     to.name !== "Register" &&
     to.name !== "Home" &&
-    !token
+    store.isUserLoggedIn === false
   ) {
     next({ name: "Login" });
   } else {

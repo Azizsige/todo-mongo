@@ -134,7 +134,7 @@ import { useRouter } from "vue-router";
 import { useStore } from "./../stores/store.js";
 import { useCookies } from "vue3-cookies";
 const { cookies } = useCookies();
-const getCookie = cookies.get("refreshToken");
+const getCookie = cookies.get("accessToken");
 import axios from "axios";
 
 const router = useRouter();
@@ -203,13 +203,13 @@ const getExpired = () => {
 };
 
 const logout = async () => {
-  await cookies.remove("refreshToken");
+  await cookies.remove("accessToken");
 
   store.isUserLoggedIn = false;
 };
 
 onMounted(async () => {
-  if (store.isUserLoggedIn && getCookie) {
+  if (store.isUserLoggedIn == true) {
     router.push("/dashboard");
     await store.getData();
     console.log("Token Valid");

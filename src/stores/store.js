@@ -2,13 +2,7 @@ import { defineStore } from "pinia";
 import axios from "axios";
 import { useRouter } from "vue-router";
 
-import { useCookies } from "vue3-cookies";
-const { cookies } = useCookies();
-const getCookie = cookies.get("refreshToken");
-
 import Swal from "sweetalert2";
-
-const router = useRouter();
 
 export const useStore = defineStore("store", {
   state: () => ({
@@ -18,12 +12,13 @@ export const useStore = defineStore("store", {
     auth: false,
     // token
     accessToken: null,
-    refreshToken: null,
+    accessToken: null,
     expiredAt: null,
     expiredAccessToken: null,
-    expiredRefreshToken: null,
+    expiredaccessToken: null,
     userNameStore: null,
     userEmailStore: null,
+    userIdStore: null,
     // data user
     dataUser: null,
 
@@ -44,7 +39,7 @@ export const useStore = defineStore("store", {
   },
   actions: {
     async getData() {
-      const getCurrentCookie = await cookies.get("refreshToken");
+      // const getCurrentCookie = await cookies.get("accessToken");
       if (this.isUserLoggedIn === false) {
         return (this.dataUser = null);
       } else {
@@ -53,21 +48,38 @@ export const useStore = defineStore("store", {
             "https://todo-mongo-api-one.vercel.app/api/users/me",
             {
               headers: {
-                Authorization: `Bearer ${getCurrentCookie}`,
+                Authorization: `Bearer ${this.accessToken}`,
               },
               // withCredentials: true,
             }
           );
+
           this.dataUser = response.data.user.todos;
+          console.log(response.data);
+          console.log(this.accessToken);
+          // await this.refreshToken();
+
+          if (response.data.status === "false") {
+            // alert("Token Expired");
+            await this.refreshToken();
+          }
+
           return this.dataUser;
         } catch (error) {
-          console.log(error);
-          return null;
+          if (error.response.data.status == "false") {
+            // Swal.fire({
+            //   icon: "error",
+            //   title: `${error.response.data.message}`,
+            // });
+            console.log(this.accessToken);
+            await this.refreshToken();
+            // router.push({ name: "Login" });
+          }
         }
       }
     },
     async addTodoStore(description, title) {
-      const getCurrentCookie = await cookies.get("refreshToken");
+      const getCurrentCookie = await cookies.get("accessToken");
       if (this.isUserLoggedIn === false) {
         return (this.dataUser = null);
       }
@@ -87,7 +99,7 @@ export const useStore = defineStore("store", {
         .post("https://todo-mongo-api-one.vercel.app/api/todos/", params, {
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
-            Authorization: `Bearer ${getCurrentCookie}`,
+            Authorization: `Bearer ${this.accessToken}`,
           },
         })
         .then((res) => {
@@ -107,7 +119,7 @@ export const useStore = defineStore("store", {
         });
     },
     deleteTodo(id) {
-      const getCurrentCookie = cookies.get("refreshToken");
+      const getCurrentCookie = cookies.get("accessToken");
       try {
         Swal.fire({
           title: "Please Wait...",
@@ -119,7 +131,7 @@ export const useStore = defineStore("store", {
         return axios
           .delete(`https://todo-mongo-api-one.vercel.app/api/todos/${id}`, {
             headers: {
-              Authorization: `Bearer ${getCurrentCookie}`,
+              Authorization: `Bearer ${this.accessToken}`,
             },
           })
           .then((res) => {
@@ -139,7 +151,7 @@ export const useStore = defineStore("store", {
       }
     },
     async updateTodoStore(id, description, title) {
-      const getCurrentCookie = await cookies.get("refreshToken");
+      const getCurrentCookie = await cookies.get("accessToken");
       Swal.fire({
         title: "Please Wait...",
         allowOutsideClick: false,
@@ -156,7 +168,7 @@ export const useStore = defineStore("store", {
         .put(`https://todo-mongo-api-one.vercel.app/api/todos/${id}`, params, {
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
-            Authorization: `Bearer ${getCurrentCookie}`,
+            Authorization: `Bearer ${this.accessToken}`,
           },
         })
         .then((res) => {
@@ -178,7 +190,7 @@ export const useStore = defineStore("store", {
         });
     },
     async updateIsDone(id, isDone) {
-      const getCurrentCookie = await cookies.get("refreshToken");
+      const getCurrentCookie = await cookies.get("accessToken");
       const params = new URLSearchParams();
       params.append("isDone", isDone);
       await axios
@@ -188,7 +200,7 @@ export const useStore = defineStore("store", {
           {
             headers: {
               "Content-Type": "application/x-www-form-urlencoded",
-              Authorization: `Bearer ${getCurrentCookie}`,
+              Authorization: `Bearer ${this.accessToken}`,
             },
           }
         )
@@ -204,21 +216,77 @@ export const useStore = defineStore("store", {
         });
     },
     logout() {
-      cookies.remove("refreshToken");
-
       this.isUserLoggedIn = false;
+    },
+    async refreshToken() {
+      const params = new URLSearchParams();
+
+      params.append("userId", this.userIdStore);
+      await axios
+        .post(
+          `https://todo-mongo-api-one.vercel.app/api/auth/refresh-token`,
+          params,
+          {
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+          }
+        )
+        .then((res) => {
+          console.log(res.data);
+          if (res.data.status) {
+            this.accessToken = res.data.accessToken;
+            alert("Token Refreshed");
+            // router.push("/");
+            this.getData();
+            // this.getTodoLength;
+          } else {
+            Swal.fire({
+              icon: "error",
+              title: `${err.response.data.message}`,
+              showConfirmButton: true,
+              confirmButtonText: "Login",
+            }).then((result) => {
+              if (result.isConfirmed) {
+                this.isUserLoggedIn = false;
+
+                location.reload();
+              }
+            });
+          }
+        })
+        .catch((err) => {
+          if (err.response.data.status == "false") {
+            // swall dengan tombol login
+            Swal.fire({
+              icon: "error",
+              title: `${err.response.data.message}`,
+              showConfirmButton: true,
+              confirmButtonText: "Login",
+            }).then((result) => {
+              if (result.isConfirmed) {
+                this.isUserLoggedIn = false;
+
+                location.reload();
+              }
+            });
+            // this.isUserLoggedIn = false;
+            // location.reload();
+          }
+          console.log(err);
+        });
     },
   },
   persist: {
     paths: [
       "isUserLoggedIn",
-      // "accessToken",
-      // "refreshToken",
       "expiredAccessToken",
-      "expiredRefreshToken",
+      "expiredaccessToken",
       "expiredAt",
       "userNameStore",
       "userEmailStore",
+      "userIdStore",
+      "accessToken",
     ],
   },
 });

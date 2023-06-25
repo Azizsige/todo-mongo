@@ -107,10 +107,10 @@ const confirm_password = ref("");
 const password = ref("");
 const email = ref("");
 
-const setAuthTokenCookie = (refreshToken) => {
-  cookies.set("refreshToken", refreshToken);
+const setAuthTokenCookie = (accessToken) => {
+  cookies.set("accessToken", accessToken);
 
-  const getCookie = cookies.get("refreshToken");
+  const getCookie = cookies.get("accessToken");
   console.log(getCookie);
 };
 
@@ -151,18 +151,20 @@ const login = () => {
         let expiredAt = res.data.user.updatedAt;
         let userName = res.data.user.username;
         let userEmail = res.data.user.email;
-        // store.accessToken = accessToken;
+        let userId = res.data.user._id;
+        store.accessToken = accessToken;
         // store.refreshToken = refreshToken;
         store.expiredAt = expiredAt;
         store.isUserLoggedIn = true;
         store.userNameStore = userName;
         store.userEmailStore = userEmail;
+        store.userIdStore = userId;
         Swal.fire({
           icon: "success",
           title: `${res.data.message}`,
         });
         router.push("/dashboard");
-        setAuthTokenCookie(refreshToken);
+        // setAuthTokenCookie(accessToken);
       } else {
         // store.isUserLoggedIn = false;
         // store.userToken = null;
@@ -220,7 +222,7 @@ const login = () => {
 
 onMounted(() => {
   store.dataUser = null;
-  if (store.isUserLoggedIn && getCookie) {
+  if (store.isUserLoggedIn == true) {
     router.push("/dashboard");
   }
 });
