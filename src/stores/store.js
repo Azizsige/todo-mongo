@@ -54,13 +54,12 @@ export const useStore = defineStore("store", {
             }
           );
 
-          this.dataUser = response.data.user.todos;
-          console.log(response.data);
-          console.log(this.accessToken);
-          // await this.refreshToken();
-
-          if (response.data.status === "false") {
-            // alert("Token Expired");
+          if (response.data.status === "true") {
+            this.dataUser = response.data.user.todos;
+            console.log(response.data);
+            console.log(this.accessToken);
+            // await this.refreshToken();
+          } else {
             await this.refreshToken();
           }
 
@@ -101,7 +100,7 @@ export const useStore = defineStore("store", {
             Authorization: `Bearer ${this.accessToken}`,
           },
         })
-        .then((res) => {
+        .then(async (res) => {
           Swal.fire({
             icon: "success",
             title: `${res.data.message}`,
@@ -111,10 +110,24 @@ export const useStore = defineStore("store", {
             title = "";
             this.getData();
             this.getTodoLength;
+          } else {
+            Swal.close();
+            console.log("add todo with new token 1");
+            this.refreshToken();
           }
         })
         .catch((err) => {
-          console.log(err);
+          if (err.response.data.status === "false") {
+            Swal.close();
+            this.refreshToken();
+
+            this.addTodoStore(description, title);
+
+            this.getData();
+
+            console.log("add todo with new token 2");
+          }
+          // this.refreshToken();
         });
     },
     deleteTodo(id) {
@@ -145,7 +158,13 @@ export const useStore = defineStore("store", {
             console.log(err);
           });
       } catch (err) {
-        console.log(err);
+        if (err.response.data.status === "false") {
+          this.refreshToken();
+          this.deleteTodo();
+          this.getData();
+
+          console.log("delete todo with new token");
+        }
       }
     },
     async updateTodoStore(id, description, title) {
@@ -183,7 +202,13 @@ export const useStore = defineStore("store", {
           }
         })
         .catch((err) => {
-          console.log(err);
+          if (err.response.data.status === "false") {
+            this.refreshToken();
+            this.updateTodoStore(id, description, title);
+            this.getData();
+
+            console.log("update todo with new token");
+          }
         });
     },
     async updateIsDone(id, isDone) {
@@ -208,7 +233,13 @@ export const useStore = defineStore("store", {
           }
         })
         .catch((err) => {
-          console.log(err);
+          if (err.response.data.status === "false") {
+            this.refreshToken();
+            this.updateIsDone(id, isDone);
+            this.getData();
+
+            console.log("update isdone todo with new token");
+          }
         });
     },
     logout() {
@@ -231,27 +262,16 @@ export const useStore = defineStore("store", {
         .then((res) => {
           console.log(res.data);
           if (res.data.status) {
+            Swal.close();
             this.accessToken = res.data.accessToken;
-            alert("Token Refreshed");
+            // alert("Token Refreshed");
             // router.push("/");
             this.getData();
             // this.getTodoLength;
-          } else {
-            Swal.fire({
-              icon: "error",
-              title: `${err.response.data.message}`,
-              showConfirmButton: true,
-              confirmButtonText: "Login",
-            }).then((result) => {
-              if (result.isConfirmed) {
-                this.isUserLoggedIn = false;
-
-                location.reload();
-              }
-            });
           }
         })
         .catch((err) => {
+          Swal.close();
           if (err.response.data.status == "false") {
             // swall dengan tombol login
             Swal.fire({
@@ -259,10 +279,10 @@ export const useStore = defineStore("store", {
               title: `${err.response.data.message}`,
               showConfirmButton: true,
               confirmButtonText: "Login",
+              allowOutsideClick: false,
             }).then((result) => {
               if (result.isConfirmed) {
                 this.isUserLoggedIn = false;
-
                 location.reload();
               }
             });
