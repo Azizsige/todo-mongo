@@ -24,6 +24,8 @@ export const useStore = defineStore("store", {
 
     isUserLoggedIn: false,
     isSwalShown: false,
+    isRefreshingToken: false, // Tambahkan state untuk menandakan apakah sedang dalam proses refresh token
+    isTodoAdded: false,
 
     // data todo for update
     todoTitleStore: null,
@@ -57,11 +59,13 @@ export const useStore = defineStore("store", {
 
           if (response.data.status === "true") {
             this.dataUser = response.data.user.todos;
-            console.log(response.data);
-            console.log(this.accessToken);
             // await this.refreshToken();
           } else {
-            await this.refreshToken();
+            if (response.data.message === "Invalid token or token expired") {
+              await this.refreshToken();
+            } else {
+              this.dataUser = null;
+            }
           }
 
           return this.dataUser;
@@ -71,75 +75,98 @@ export const useStore = defineStore("store", {
             //   icon: "error",
             //   title: `${error.response.data.message}`,
             // });
-            console.log(this.accessToken);
             await this.refreshToken();
             // router.push({ name: "Login" });
           }
         }
       }
     },
-    async addTodoStore(description, title) {
-      if (this.isUserLoggedIn === false) {
-        return (this.dataUser = null);
-      }
-      Swal.fire({
-        title: "Please Wait...",
-        allowOutsideClick: false,
-        didOpen: () => {
-          Swal.showLoading();
-        },
-      });
-      const params = new URLSearchParams();
+    // async addTodoStore(description, title) {
+    //   if (this.isUserLoggedIn === false) {
+    //     return (this.dataUser = null);
+    //   }
 
-      params.append("description", description);
-      params.append("title", title);
+    //   if (!this.isSwalShown) {
+    //     // Periksa apakah SweetAlert sudah ditampilkan sebelumnya
+    //     this.isSwalShown = true; // Set flag menjadi true agar SweetAlert hanya muncul sekali
+    //     Swal.fire({
+    //       title: "Please Wait...",
+    //       allowOutsideClick: false,
+    //       didOpen: () => {
+    //         Swal.showLoading();
+    //       },
+    //     });
+    //   }
 
-      await axios
-        .post("https://todo-mongo-api-one.vercel.app/api/todos/", params, {
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-            Authorization: `Bearer ${this.accessToken}`,
-          },
-        })
-        .then(async (res) => {
-          Swal.fire({
-            icon: "success",
-            title: `${res.data.message}`,
-          });
-          if (res.data.status) {
-            description = "";
-            title = "";
-            this.getData();
-            this.getTodoLength;
-          } else {
-            Swal.close();
-            console.log("add todo with new token 1");
-            this.refreshToken();
-          }
-        })
-        .catch((err) => {
-          if (err.response.data.status === "false") {
-            Swal.close();
-            this.refreshToken();
+    //   const params = new URLSearchParams();
 
-            this.addTodoStore(description, title);
+    //   params.append("description", description);
+    //   params.append("title", title);
 
-            this.getData();
+    //   await axios
+    //     .post("https://todo-mongo-api-one.vercel.app/api/todos/", params, {
+    //       headers: {
+    //         "Content-Type": "application/x-www-form-urlencoded",
+    //         Authorization: `Bearer ${this.accessToken}`,
+    //       },
+    //     })
+    //     .then(async (res) => {
+    //       Swal.fire({
+    //         icon: "success",
+    //         title: `${res.data.message}`,
+    //       });
+    //       if (res.data.status) {
+    //         description = "";
+    //         title = "";
+    //         this.getData();
+    //         this.getTodoLength;
+    //       }
+    //     })
+    //     .catch((err) => {
+    //       console.log(err.response.data);
+    //       if (err.response.data.message === "Invalid token or token expired") {
+    //         Swal.close();
+    //         this.refreshToken();
 
-            console.log("add todo with new token 2");
-          }
-          // this.refreshToken();
-        });
-    },
+    //         this.addTodoStore(description, title);
+
+    //         this.getData();
+    //       } else {
+    //         this.dataUser = null;
+    //         return;
+    //       }
+    //       // if (err.response.data.status === "false") {
+    //       //   Swal.close();
+    //       //   this.refreshToken();
+
+    //       //   this.addTodoStore(description, title);
+
+    //       //   this.getData();
+
+    //       //   console.log(err.response.data.message);
+    //       // }
+    //       // this.refreshToken();
+    //     })
+    //     .finally(() => {
+    //       if (this.isSwalShown) {
+    //         // Periksa apakah SweetAlert sedang ditampilkan
+    //         this.isSwalShown = false; // Set flag menjadi false agar SweetAlert dapat ditampilkan lagi
+    //       }
+    //     });
+    // },
     deleteTodo(id) {
       try {
-        Swal.fire({
-          title: "Please Wait...",
-          allowOutsideClick: false,
-          didOpen: () => {
-            Swal.showLoading();
-          },
-        });
+        if (!this.isSwalShown) {
+          // Periksa apakah SweetAlert sudah ditampilkan sebelumnya
+          this.isSwalShown = true; // Set flag menjadi true agar SweetAlert hanya muncul sekali
+          Swal.fire({
+            title: "Please Wait...",
+            allowOutsideClick: false,
+            didOpen: () => {
+              Swal.showLoading();
+            },
+          });
+        }
         return axios
           .delete(`https://todo-mongo-api-one.vercel.app/api/todos/${id}`, {
             headers: {
@@ -157,6 +184,12 @@ export const useStore = defineStore("store", {
           })
           .catch((err) => {
             console.log(err);
+          })
+          .finally(() => {
+            if (this.isSwalShown) {
+              // Periksa apakah SweetAlert sedang ditampilkan
+              this.isSwalShown = false; // Set flag menjadi false agar SweetAlert dapat ditampilkan lagi
+            }
           });
       } catch (err) {
         if (err.response.data.status === "false") {
@@ -168,14 +201,162 @@ export const useStore = defineStore("store", {
         }
       }
     },
+
+    async addTodoStore(description, title) {
+      if (this.isUserLoggedIn === false) {
+        return (this.dataUser = null);
+      }
+
+      if (this.isRefreshingToken) {
+        return; // Jika sedang melakukan refresh token, keluar dari fungsi
+      }
+
+      if (!this.isSwalShown) {
+        this.isSwalShown = true;
+        Swal.fire({
+          title: "Please Wait...",
+          allowOutsideClick: false,
+          didOpen: () => {
+            Swal.showLoading();
+          },
+        });
+      }
+
+      const params = new URLSearchParams();
+      params.append("description", description);
+      params.append("title", title);
+
+      await axios
+        .post("https://todo-mongo-api-one.vercel.app/api/todos/", params, {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            Authorization: `Bearer ${this.accessToken}`,
+          },
+        })
+        .then(async (res) => {
+          if (res.data.status) {
+            description = "";
+            title = "";
+            this.isTodoAdded = true; // Todo berhasil ditambahkan
+            this.getData();
+            if (!this.isRefreshingToken) {
+              Swal.fire({
+                icon: "success",
+                title: `Todo Berhasil Ditambahkan`,
+              });
+            }
+            return; // Keluar dari fungsi setelah todo ditambahkan
+          }
+        })
+        .catch(async (err) => {
+          if (err.response.data.message === "Invalid token or token expired") {
+            Swal.close();
+            if (!this.isRefreshingToken) {
+              this.isRefreshingToken = true; // Menandakan proses refresh token sedang berlangsung
+              await this.refreshToken();
+              this.isRefreshingToken = false; // Refresh token selesai
+              this.isSwalShown = true;
+            }
+            if (!this.isTodoAdded) {
+              // Jika todo belum berhasil ditambahkan, panggil kembali addTodoStore
+              this.addTodoStore(description, title);
+            }
+          } else {
+            this.dataUser = null;
+            return;
+          }
+        })
+        .finally(() => {
+          if (this.isSwalShown) {
+            this.isSwalShown = false;
+          }
+        });
+    },
+
+    // async addTodoStore(description, title) {
+    //   if (this.isUserLoggedIn === false) {
+    //     return (this.dataUser = null);
+    //   }
+
+    //   if (this.isRefreshingToken) {
+    //     return; // Jika sedang melakukan refresh token, keluar dari fungsi
+    //   }
+
+    //   if (!this.isSwalShown) {
+    //     this.isSwalShown = true;
+    //     Swal.fire({
+    //       title: "Please Wait...",
+    //       allowOutsideClick: false,
+    //       didOpen: () => {
+    //         Swal.showLoading();
+    //       },
+    //     });
+    //   }
+
+    //   const params = new URLSearchParams();
+    //   params.append("description", description);
+    //   params.append("title", title);
+
+    //   await axios
+    //     .post("https://todo-mongo-api-one.vercel.app/api/todos/", params, {
+    //       headers: {
+    //         "Content-Type": "application/x-www-form-urlencoded",
+    //         Authorization: `Bearer ${this.accessToken}`,
+    //       },
+    //     })
+    //     .then(async (res) => {
+    //       Swal.fire({
+    //         icon: "success",
+    //         title: `${res.data.message}`,
+    //       });
+    //       if (res.data.status) {
+    //         description = "";
+    //         title = "";
+    //         this.isTodoAdded = true; // Todo berhasil ditambahkan
+    //         this.getData();
+    //         return; // Keluar dari fungsi setelah todo ditambahkan
+    //       }
+    //     })
+    //     .catch(async (err) => {
+    //       if (err.response.data.message === "Invalid token or token expired") {
+    //         Swal.close();
+    //         if (!this.isRefreshingToken) {
+    //           Swal.fire({
+    //             icon: "success",
+    //             title: `Todo Berhasil Ditambahkan`,
+    //           });
+    //           this.isRefreshingToken = true; // Menandakan proses refresh token sedang berlangsung
+    //           await this.refreshToken();
+    //           this.isRefreshingToken = false; // Refresh token selesai
+    //           // this.addTodoStore(description, title); // Panggil kembali fungsi addTodoStore
+    //         }
+    //         if (!this.isTodoAdded) {
+    //           // Jika todo belum berhasil ditambahkan, panggil kembali addTodoStore
+    //           this.addTodoStore(description, title);
+    //         }
+    //       } else {
+    //         this.dataUser = null;
+    //         return;
+    //       }
+    //     })
+    //     .finally(() => {
+    //       if (this.isSwalShown) {
+    //         this.isSwalShown = false;
+    //       }
+    //     });
+    // },
     async updateTodoStore(id, description, title) {
-      Swal.fire({
-        title: "Please Wait...",
-        allowOutsideClick: false,
-        didOpen: () => {
-          Swal.showLoading();
-        },
-      });
+      if (!this.isSwalShown) {
+        // Periksa apakah SweetAlert sudah ditampilkan sebelumnya
+        this.isSwalShown = true; // Set flag menjadi true agar SweetAlert hanya muncul sekali
+        Swal.fire({
+          title: "Please Wait...",
+          allowOutsideClick: false,
+          didOpen: () => {
+            Swal.showLoading();
+          },
+        });
+      }
       const params = new URLSearchParams();
 
       params.append("description", description);
@@ -209,6 +390,12 @@ export const useStore = defineStore("store", {
             this.getData();
 
             console.log("update todo with new token");
+          }
+        })
+        .finally(() => {
+          if (this.isSwalShown) {
+            // Periksa apakah SweetAlert sedang ditampilkan
+            this.isSwalShown = false; // Set flag menjadi false agar SweetAlert dapat ditampilkan lagi
           }
         });
     },
@@ -247,7 +434,6 @@ export const useStore = defineStore("store", {
       this.isUserLoggedIn = false;
     },
     async refreshToken() {
-      // Flag untuk memastikan Swal.fire hanya dipanggil sekali
       let isSwalOpen = false;
 
       const params = new URLSearchParams();
@@ -266,20 +452,18 @@ export const useStore = defineStore("store", {
 
         console.log(response.data);
         if (response.data.status) {
-          Swal.close();
-          this.accessToken = response.data.accessToken;
-          // alert("Token Refreshed");
-          // router.push("/");
-          this.getData();
-          // this.getTodoLength;
+          if (!this.isSwalShown) {
+            this.accessToken = response.data.accessToken;
+            this.getData();
+            console.log(response.data);
+          }
         }
       } catch (err) {
-        // Swal.close();
-
+        console.log(err.response.data);
         if (err.response.data.status == "false") {
+          console.log(err.response.data);
           if (!this.isSwalShown) {
-            // Periksa apakah SweetAlert sudah ditampilkan
-            this.isSwalShown = true; // Set flag menjadi true agar tidak muncul lagi saat pemanggilan berikutnya
+            this.isSwalShown = true;
             Swal.fire({
               icon: "error",
               title: `${err.response.data.message}`,
@@ -292,12 +476,66 @@ export const useStore = defineStore("store", {
                 this.isUserLoggedIn = false;
                 location.reload();
               }
-              // this.isSwalShown = false; // Set flag menjadi false setelah SweetAlert ditutup
             });
           }
         }
       }
     },
+    // async refreshToken() {
+    //   // Flag untuk memastikan Swal.fire hanya dipanggil sekali
+    //   let isSwalOpen = false;
+
+    //   const params = new URLSearchParams();
+    //   params.append("userId", this.userIdStore);
+
+    //   try {
+    //     const response = await axios.post(
+    //       `https://todo-mongo-api-one.vercel.app/api/auth/refresh-token`,
+    //       params,
+    //       {
+    //         headers: {
+    //           "Content-Type": "application/x-www-form-urlencoded",
+    //         },
+    //       }
+    //     );
+
+    //     console.log(response.data);
+    //     if (response.data.status) {
+    //       if (!this.isSwalShown) {
+    //         this.accessToken = response.data.accessToken;
+    //         // alert("Token Refreshed");
+    //         // router.push("/");
+    //         this.getData();
+    //         console.log(response.data);
+    //         // this.getTodoLength;
+    //       }
+    //     }
+    //   } catch (err) {
+    //     // Swal.close();
+    //     console.log(err.response.data);
+    //     if (err.response.data.status == "false") {
+    //       console.log(err.response.data);
+    //       if (!this.isSwalShown) {
+    //         // Periksa apakah SweetAlert sudah ditampilkan
+    //         this.isSwalShown = true; // Set flag menjadi true agar tidak muncul lagi saat pemanggilan berikutnya
+    //         Swal.fire({
+    //           icon: "error",
+    //           title: `${err.response.data.message}`,
+    //           text: "Silahkan Login Kembali",
+    //           showConfirmButton: true,
+    //           confirmButtonText: "Login",
+    //           allowOutsideClick: false,
+    //         }).then((result) => {
+    //           if (result.isConfirmed) {
+    //             this.isUserLoggedIn = false;
+    //             location.reload();
+    //           }
+    //           // this.isSwalShown = false; // Set flag menjadi false setelah SweetAlert ditutup
+    //         });
+    //       }
+    //     }
+    //   }
+    // },
   },
   persist: {
     paths: [
