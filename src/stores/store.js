@@ -23,6 +23,7 @@ export const useStore = defineStore("store", {
     dataUser: null,
 
     isUserLoggedIn: false,
+    isSwalShown: false,
 
     // data todo for update
     todoTitleStore: null,
@@ -246,11 +247,14 @@ export const useStore = defineStore("store", {
       this.isUserLoggedIn = false;
     },
     async refreshToken() {
-      const params = new URLSearchParams();
+      // Flag untuk memastikan Swal.fire hanya dipanggil sekali
+      let isSwalOpen = false;
 
+      const params = new URLSearchParams();
       params.append("userId", this.userIdStore);
-      await axios
-        .post(
+
+      try {
+        const response = await axios.post(
           `https://todo-mongo-api-one.vercel.app/api/auth/refresh-token`,
           params,
           {
@@ -258,25 +262,28 @@ export const useStore = defineStore("store", {
               "Content-Type": "application/x-www-form-urlencoded",
             },
           }
-        )
-        .then((res) => {
-          console.log(res.data);
-          if (res.data.status) {
-            Swal.close();
-            this.accessToken = res.data.accessToken;
-            // alert("Token Refreshed");
-            // router.push("/");
-            this.getData();
-            // this.getTodoLength;
-          }
-        })
-        .catch((err) => {
+        );
+
+        console.log(response.data);
+        if (response.data.status) {
           Swal.close();
-          if (err.response.data.status == "false") {
-            // swall dengan tombol login
+          this.accessToken = response.data.accessToken;
+          // alert("Token Refreshed");
+          // router.push("/");
+          this.getData();
+          // this.getTodoLength;
+        }
+      } catch (err) {
+        // Swal.close();
+
+        if (err.response.data.status == "false") {
+          if (!this.isSwalShown) {
+            // Periksa apakah SweetAlert sudah ditampilkan
+            this.isSwalShown = true; // Set flag menjadi true agar tidak muncul lagi saat pemanggilan berikutnya
             Swal.fire({
               icon: "error",
               title: `${err.response.data.message}`,
+              text: "Silahkan Login Kembali",
               showConfirmButton: true,
               confirmButtonText: "Login",
               allowOutsideClick: false,
@@ -285,12 +292,11 @@ export const useStore = defineStore("store", {
                 this.isUserLoggedIn = false;
                 location.reload();
               }
+              // this.isSwalShown = false; // Set flag menjadi false setelah SweetAlert ditutup
             });
-            // this.isUserLoggedIn = false;
-            // location.reload();
           }
-          console.log(err);
-        });
+        }
+      }
     },
   },
   persist: {
