@@ -29,6 +29,7 @@ export const useStore = defineStore("store", {
     isTodoUpdated: false,
     isTodoDeleted: false,
     isTodoDone: false,
+    isTokenExpiredAlertShown: false,
 
     // data todo for update
     todoTitleStore: null,
@@ -79,6 +80,7 @@ export const useStore = defineStore("store", {
             //   title: `${error.response.data.message}`,
             // });
             await this.refreshToken();
+            console.log(error.response.data.message);
             // router.push({ name: "Login" });
           }
         }
@@ -180,7 +182,7 @@ export const useStore = defineStore("store", {
         return; // Jika sedang melakukan refresh token, keluar dari fungsi
       }
 
-      if (!this.isSwalShown) {
+      if (!this.isSwalShown || this.isSwalShown) {
         this.isSwalShown = true;
         Swal.fire({
           title: "Please Wait...",
@@ -219,26 +221,25 @@ export const useStore = defineStore("store", {
         })
         .catch(async (err) => {
           if (err.response.data.message === "Invalid token or token expired") {
-            Swal.close();
             if (!this.isRefreshingToken) {
               this.isRefreshingToken = true; // Menandakan proses refresh token sedang berlangsung
               await this.refreshToken();
               this.isRefreshingToken = false; // Refresh token selesai
               this.isSwalShown = true;
             }
-            if (!this.isTodoAdded) {
+            if (!this.isTodoAdded && !this.isTokenExpiredAlertShown) {
               // Jika todo belum berhasil ditambahkan, panggil kembali addTodoStore
+              this.isTokenExpiredAlertShown = true; // Set state menjadi true
+              this.addTodoStore(description, title);
+              this.getData();
+            } else if (this.isTodoAdded && !this.isTokenExpiredAlertShown) {
+              this.isTokenExpiredAlertShown = true; // Set state menjadi true
               this.addTodoStore(description, title);
               this.getData();
             }
           } else {
             this.dataUser = null;
             return;
-          }
-        })
-        .finally(() => {
-          if (this.isSwalShown) {
-            this.isSwalShown = false;
           }
         });
     },
@@ -411,24 +412,24 @@ export const useStore = defineStore("store", {
         }
       } catch (err) {
         console.log(err.response.data);
-        if (err.response.data.status == "false") {
-          console.log(err.response.data);
-          if (!this.isSwalShown) {
-            this.isSwalShown = true;
-            Swal.fire({
-              icon: "error",
-              title: `${err.response.data.message}`,
-              text: "Silahkan Login Kembali",
-              showConfirmButton: true,
-              confirmButtonText: "Login",
-              allowOutsideClick: false,
-            }).then((result) => {
-              if (result.isConfirmed) {
-                this.isUserLoggedIn = false;
-                location.reload();
-              }
-            });
-          }
+        if (
+          err.response.data.status == "false" &&
+          !this.isTokenExpiredAlertShown
+        ) {
+          this.isTokenExpiredAlertShown = true; // Set state menjadi true
+          Swal.fire({
+            icon: "error",
+            title: `${err.response.data.message}`,
+            text: "Silahkan Login Kembali",
+            showConfirmButton: true,
+            confirmButtonText: "Login",
+            allowOutsideClick: false,
+          }).then((result) => {
+            if (result.isConfirmed) {
+              this.isUserLoggedIn = false;
+              location.reload();
+            }
+          });
         }
       }
     },
