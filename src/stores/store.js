@@ -74,6 +74,7 @@ export const useStore = defineStore("store", {
 
           return this.dataUser;
         } catch (error) {
+          await this.refreshToken();
           if (error.response.data.status == "false") {
             // Swal.fire({
             //   icon: "error",
@@ -182,8 +183,8 @@ export const useStore = defineStore("store", {
         return; // Jika sedang melakukan refresh token, keluar dari fungsi
       }
 
-      if (!this.isSwalShown || this.isSwalShown) {
-        this.isSwalShown = true;
+      if (!this.isSwalShown) {
+        // this.isSwalShown = true;
         Swal.fire({
           title: "Please Wait...",
           allowOutsideClick: false,
@@ -205,6 +206,7 @@ export const useStore = defineStore("store", {
           },
         })
         .then(async (res) => {
+          console.log(res.data.status);
           if (res.data.status) {
             description = "";
             title = "";
@@ -220,20 +222,17 @@ export const useStore = defineStore("store", {
           }
         })
         .catch(async (err) => {
+          console.log(err.response.data.message);
           if (err.response.data.message === "Invalid token or token expired") {
             if (!this.isRefreshingToken) {
               this.isRefreshingToken = true; // Menandakan proses refresh token sedang berlangsung
               await this.refreshToken();
               this.isRefreshingToken = false; // Refresh token selesai
-              this.isSwalShown = true;
+              this.isSwalShown = false;
             }
-            if (!this.isTodoAdded && !this.isTokenExpiredAlertShown) {
+            if (!this.isTokenExpiredAlertShown) {
               // Jika todo belum berhasil ditambahkan, panggil kembali addTodoStore
-              this.isTokenExpiredAlertShown = true; // Set state menjadi true
-              this.addTodoStore(description, title);
-              this.getData();
-            } else if (this.isTodoAdded && !this.isTokenExpiredAlertShown) {
-              this.isTokenExpiredAlertShown = true; // Set state menjadi true
+              // this.isTokenExpiredAlertShown = true; // Set state menjadi true
               this.addTodoStore(description, title);
               this.getData();
             }
@@ -408,6 +407,7 @@ export const useStore = defineStore("store", {
             this.accessToken = response.data.accessToken;
             this.getData();
             console.log(response.data);
+            this.isSwalShown = false;
           }
         }
       } catch (err) {
