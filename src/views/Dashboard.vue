@@ -136,6 +136,7 @@ import { useCookies } from "vue3-cookies";
 const { cookies } = useCookies();
 const getCookie = cookies.get("accessToken");
 import axios from "axios";
+import Swal from "sweetalert2";
 
 const router = useRouter();
 const store = useStore();
@@ -203,9 +204,39 @@ const getExpired = () => {
 };
 
 const logout = async () => {
-  await cookies.remove("accessToken");
+  Swal.fire({
+    title: "Please Wait...",
+    allowOutsideClick: false,
+    didOpen: () => {
+      Swal.showLoading();
+    },
+  });
+  const params = new URLSearchParams();
+  params.append("userId", store.userIdStore);
+  params.append("accessToken", store.accessToken);
 
-  store.isUserLoggedIn = false;
+  try {
+    const response = await axios.post(
+      `https://todo-mongo-api-one.vercel.app/api/auth/logout`,
+      params,
+      {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          Authorization: `Bearer ${store.accessToken}`,
+        },
+      }
+    );
+
+    Swal.fire({
+      icon: "success",
+      title: `Logout Berhasil`,
+    });
+
+    store.isUserLoggedIn = false;
+    router.push("/login");
+  } catch (err) {
+    console.log(err.response.data);
+  }
 };
 
 onMounted(async () => {

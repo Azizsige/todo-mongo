@@ -354,54 +354,39 @@ export const useStore = defineStore("store", {
           }
         });
     },
-    // async updateIsDone(id, isDone) {
-    //   const params = new URLSearchParams();
-    //   params.append("isDone", isDone);
-    //   await axios
-    //     .patch(
-    //       `https://todo-mongo-api-one.vercel.app/api/todos/${id}`,
-    //       params,
-    //       {
-    //         headers: {
-    //           "Content-Type": "application/x-www-form-urlencoded",
-    //           Authorization: `Bearer ${this.accessToken}`,
-    //         },
-    //       }
-    //     )
-    //     .then((res) => {
-    //       if (res.data.status) {
-    //         // router.push("/");
-    //         this.isTodoDone = true;
-    //         this.getData();
-    //         this.getTodoLength;
-    //       }
-    //     })
-    //     .catch(async (err) => {
-    //       if (err.response.data.message === "Invalid token or token expired") {
-    //         Swal.close();
-    //         if (!this.isRefreshingToken) {
-    //           this.isRefreshingToken = true; // Menandakan proses refresh token sedang berlangsung
-    //           await this.refreshToken();
-    //           this.isRefreshingToken = false; // Refresh token selesai
-    //           this.isSwalShown = true;
-    //         }
-    //         if (!this.isTodoDone) {
-    //           this.updateIsDone(id, isDone);
-    //           this.getData();
-    //         }
-    //       } else {
-    //         this.dataUser = null;
-    //         return;
-    //       }
-    //     })
-    //     .finally(() => {
-    //       if (this.isSwalShown) {
-    //         this.isSwalShown = false;
-    //       }
-    //     });
-    // },
-    logout() {
-      this.isUserLoggedIn = false;
+    async logout() {
+      Swal.fire({
+        title: "Please Wait...",
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+      const params = new URLSearchParams();
+      params.append("userId", this.userIdStore);
+      params.append("accessToken", this.accessToken);
+
+      try {
+        const response = await axios.post(
+          `http://localhost:5000/api/auth/logout`,
+          params,
+          {
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+              Authorization: `Bearer ${this.accessToken}`,
+            },
+          }
+        );
+
+        Swal.fire({
+          icon: "success",
+          title: `Logout Berhasil`,
+        });
+
+        this.isUserLoggedIn = false;
+      } catch (err) {
+        console.log(err.response.data);
+      }
     },
     async refreshToken() {
       let isSwalOpen = false;
@@ -425,13 +410,6 @@ export const useStore = defineStore("store", {
           this.accessToken = response.data.accessToken;
           this.getData();
           console.log(response.data);
-          // this.isSwalShown = else;
-          // if (!this.isSwalShown) {
-          //   this.accessToken = response.data.accessToken;
-          //   this.getData();
-          //   console.log(response.data);
-          //   this.isSwalShown = false;
-          // }
         }
       } catch (err) {
         console.log(err.response.data);

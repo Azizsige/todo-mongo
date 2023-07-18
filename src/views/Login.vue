@@ -34,30 +34,39 @@
               />
             </div>
             <div class="mb-6">
-              <label
-                for="password"
-                class="block mb-2 text-lg font-bold text-gray-900 dark:text-white"
-                >Password :
-              </label>
-              <div class="relative">
-                <input
-                  :type="showPassword ? 'text' : 'password'"
-                  v-model="password"
-                  id="password"
-                  class="block w-full p-4 pl-4 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-secondaryColor focus:border-secondaryColor"
-                  placeholder="Password"
-                  required
-                />
-                <button
-                  @click="togglePassword"
-                  type="button"
-                  class="text-white absolute right-2.5 bottom-2.5 bg-transparent font-medium rounded-lg text-sm px-4 py-2"
-                >
-                  <font-awesome-icon
-                    class="text-secondaryColor"
-                    :icon="showPassword ? 'fas fa-eye' : 'fas fa-eye-slash'"
+              <div class="wrapper-input">
+                <label
+                  for="password"
+                  class="block mb-2 text-lg font-bold text-gray-900 dark:text-white"
+                  >Password :
+                </label>
+                <div class="relative">
+                  <input
+                    :type="showPassword ? 'text' : 'password'"
+                    v-model="password"
+                    id="password"
+                    class="block w-full p-4 pl-4 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-secondaryColor focus:border-secondaryColor"
+                    placeholder="Password"
+                    required
                   />
-                </button>
+                  <button
+                    @click="togglePassword"
+                    type="button"
+                    class="text-white absolute right-2.5 bottom-2.5 bg-transparent font-medium rounded-lg text-sm px-4 py-2"
+                  >
+                    <font-awesome-icon
+                      class="text-secondaryColor"
+                      :icon="showPassword ? 'fas fa-eye' : 'fas fa-eye-slash'"
+                    />
+                  </button>
+                </div>
+              </div>
+              <div class="font-bold wrapper-forgotPassword text-end">
+                <router-link
+                  to="/forgot-password"
+                  class="text-sm text-secondaryColor"
+                  >Forgot Password ?</router-link
+                >
               </div>
             </div>
 

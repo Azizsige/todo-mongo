@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import Home from "./../views/Home.vue";
 import Register from "./../views/Register.vue";
 import Login from "./../views/Login.vue";
+import ForgotPassword from "./../views/ForgotPassword.vue";
 import Dashboard from "./../views/Dashboard.vue";
 import About from "../views/About.vue";
 import Contact from "../views/Contact.vue";
@@ -37,6 +38,14 @@ const routes = [
     component: Login,
     meta: {
       title: "Login | Todo App With Vue 3 and Mongodb",
+    },
+  },
+  {
+    path: "/forgot-password",
+    name: "ForgotPassword",
+    component: ForgotPassword,
+    meta: {
+      title: "Forgot Password | Todo App With Vue 3 and Mongodb",
     },
   },
   {
@@ -98,6 +107,7 @@ router.beforeEach(async (to, from, next) => {
     to.name !== "Login" &&
     to.name !== "Register" &&
     to.name !== "Home" &&
+    to.name !== "ForgotPassword" &&
     store.isUserLoggedIn === false
   ) {
     next({ name: "Login" });
