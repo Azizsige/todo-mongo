@@ -50,11 +50,15 @@ const resetPassword = (password) => {
   params.append("password", password);
 
   axios
-    .post("http://localhost:5000/api/auth/reset-password/" + token, params, {
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-    })
+    .post(
+      "https://todo-mongo-api-one.vercel.app/api/auth/reset-password/" + token,
+      params,
+      {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      }
+    )
     .then((res) => {
       console.log(res.data.message);
       Swal.fire({

@@ -368,7 +368,7 @@ export const useStore = defineStore("store", {
 
       try {
         const response = await axios.post(
-          `http://localhost:5000/api/auth/logout`,
+          `https://todo-mongo-api-one.vercel.app/api/auth/logout`,
           params,
           {
             headers: {

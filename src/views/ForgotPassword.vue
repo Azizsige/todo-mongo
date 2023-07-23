@@ -1,9 +1,9 @@
 <template>
-  <forgetPasswordComp @forgetPassword="forgetPassword" />
+  <ForgetPasswordComp @forgetPassword="forgetPassword" />
 </template>
 
 <script setup>
-import forgetPasswordComp from "./../components/forgetPasswordComp.vue";
+import ForgetPasswordComp from "./../components/ForgetPasswordComp.vue";
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import axios from "axios";
@@ -30,12 +30,16 @@ const forgetPassword = (email) => {
   params.append("email", email);
 
   axios
-    .post("http://localhost:5000/api/auth/forgot-password", params, {
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      // withCredentials: true,
-    })
+    .post(
+      "https://todo-mongo-api-one.vercel.app/api/auth/forgot-password",
+      params,
+      {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        // withCredentials: true,
+      }
+    )
     .then((res) => {
       if (res.data.status) {
         console.log(res.data);

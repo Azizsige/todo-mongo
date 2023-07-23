@@ -11,7 +11,9 @@ export const useResetPasswordStore = defineStore("useResetPasswordStore", {
     async verifyToken(token) {
       try {
         await axios
-          .get(`http://localhost:5000/api/auth/verify-token/${token}`)
+          .get(
+            `https://todo-mongo-api-one.vercel.app/api/auth/verify-token/${token}`
+          )
           .then((res) => {
             this.message = res.data.message;
             console.log(res.data);
@@ -40,7 +42,7 @@ export const useResetPasswordStore = defineStore("useResetPasswordStore", {
 
       axios
         .post(
-          `http://localhost:5000/api/auth/reset-password/${token}`,
+          `https://todo-mongo-api-one.vercel.app/api/auth/reset-password/${token}`,
           params,
           {
             headers: {
