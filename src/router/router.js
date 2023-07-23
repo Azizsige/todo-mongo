@@ -3,17 +3,20 @@ import Home from "./../views/Home.vue";
 import Register from "./../views/Register.vue";
 import Login from "./../views/Login.vue";
 import ForgotPassword from "./../views/ForgotPassword.vue";
+import VerificationResetPassword from "./../views/VerificationResetPassword.vue";
+import ResetPassword from "./../components/ResetPasswordComp.vue";
+import ExpiredToken from "./../components/ExpiredTokenComp.vue";
 import Dashboard from "./../views/Dashboard.vue";
 import About from "../views/About.vue";
 import Contact from "../views/Contact.vue";
 import NotFound from "../views/NotFound.vue";
+import NotFoundPages from "../views/NotFoundPages.vue";
 import Service from "../views/Service.vue";
 import Sales from "../views/Sales.vue";
 import Webinar from "../views/Webinar.vue";
 
-import { useCookies } from "vue3-cookies";
-
 import { useStore } from "./../stores/store.js";
+import axios from "axios";
 
 const routes = [
   {
@@ -48,6 +51,7 @@ const routes = [
       title: "Forgot Password | Todo App With Vue 3 and Mongodb",
     },
   },
+
   {
     path: "/dashboard",
     name: "Dashboard",
@@ -82,6 +86,38 @@ const routes = [
     component: Contact,
   },
   {
+    path: "/not-found",
+    name: "NotFoundPages",
+    component: NotFoundPages,
+  },
+
+  {
+    path: "/verification-reset-password/:token",
+    name: "VerificationResetPassword",
+    component: VerificationResetPassword,
+    meta: {
+      title: "Verifikasi | Todo App With Vue 3 and Mongodb",
+    },
+    children: [
+      {
+        path: "/verification-reset-password/:token/reset-password",
+        name: "ResetPassword",
+        component: ResetPassword,
+        meta: {
+          title: "Reset Password | Todo App With Vue 3 and Mongodb",
+        },
+      },
+      {
+        path: "/verification-reset-password/:token/expired-token",
+        name: "ExpiredToken",
+        component: ExpiredToken,
+        meta: {
+          title: "Expired Token | Todo App With Vue 3 and Mongodb",
+        },
+      },
+    ],
+  },
+  {
     path: "/:catchAll(.*)",
     name: "NotFound",
     component: NotFound,
@@ -98,16 +134,17 @@ router.beforeEach(async (to, from, next) => {
   document.title = to.meta.title;
 
   const store = useStore();
-  const { cookies } = useCookies();
-
-  // Cek apakah token tersedia dalam cookie
-  const token = await cookies.get("accessToken");
 
   if (
     to.name !== "Login" &&
     to.name !== "Register" &&
     to.name !== "Home" &&
     to.name !== "ForgotPassword" &&
+    to.name !== "VerificationResetPassword" &&
+    to.name !== "ResetPassword" &&
+    to.name !== "ExpiredToken" &&
+    to.name !== "NotFound" &&
+    to.name !== "NotFoundPages" &&
     store.isUserLoggedIn === false
   ) {
     next({ name: "Login" });
