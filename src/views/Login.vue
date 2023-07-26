@@ -156,20 +156,20 @@ const login = () => {
       if (res.data.status) {
         console.log(res.data);
         let accessToken = res.data.accessToken;
-        let refreshToken = res.data.user.refreshToken;
-        let expiredAt = res.data.user.updatedAt;
         let userName = res.data.user.username;
         let userEmail = res.data.user.email;
         let jenisKelamin = res.data.user.jenisKelamin;
         let userId = res.data.user._id;
+        let userFullName = res.data.user.fullName;
+
         store.accessToken = accessToken;
-        // store.refreshToken = refreshToken;
-        store.expiredAt = expiredAt;
         store.isUserLoggedIn = true;
         store.userNameStore = userName;
         store.userEmailStore = userEmail;
         store.userIdStore = userId;
         store.userJenisKelamin = jenisKelamin;
+        store.userFullNameStore = userFullName;
+
         Swal.fire({
           icon: "success",
           title: `${res.data.message}`,

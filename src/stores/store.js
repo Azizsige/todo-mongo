@@ -13,9 +13,9 @@ export const useStore = defineStore("store", {
     // token
     accessToken: null,
     accessToken: null,
-    expiredAt: null,
-    expiredAccessToken: null,
-    expiredaccessToken: null,
+
+    // data user
+    userFullNameStore: null,
     userNameStore: null,
     userEmailStore: null,
     userIdStore: null,
@@ -439,12 +439,10 @@ export const useStore = defineStore("store", {
   persist: {
     paths: [
       "isUserLoggedIn",
-      "expiredAccessToken",
-      "expiredaccessToken",
-      "expiredAt",
       "userNameStore",
       "userEmailStore",
       "userJenisKelamin",
+      "userFullNameStore",
       "userIdStore",
       "accessToken",
     ],

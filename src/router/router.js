@@ -14,6 +14,7 @@ import NotFoundPages from "../views/NotFoundPages.vue";
 import Service from "../views/Service.vue";
 import Sales from "../views/Sales.vue";
 import Webinar from "../views/Webinar.vue";
+import Settings from "../views/Settings.vue";
 
 import { useStore } from "./../stores/store.js";
 import axios from "axios";
@@ -139,19 +140,17 @@ const routes = [
       const token = to.params.token;
       const status = await checkToken(token);
       console.log(status);
-
-      // if (status == true) {
-      //   router.push(`/login`);
-      // } else {
-      //   router.push(`register`);
-      // }
     },
   },
-
   {
     path: "/:catchAll(.*)",
     name: "NotFound",
     component: NotFound,
+  },
+  {
+    path: "/settings",
+    name: "Settings",
+    component: Settings,
   },
 ];
 
