@@ -20,18 +20,49 @@
           <form>
             <div class="mb-6">
               <label
-                for="text"
+                for="fullName"
+                class="block mb-2 text-lg font-bold text-black dark:text-white"
+                >Full Name :
+              </label>
+              <input
+                type="text"
+                id="fullName"
+                v-model="fullName"
+                class="bg-gray-50 border border-gray-300 text-black text-md rounded-lg focus:ring-secondaryColor focus:border-secondaryColor block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="Your Full Name"
+                required
+              />
+            </div>
+            <div class="mb-6">
+              <label
+                for="username"
                 class="block mb-2 text-lg font-bold text-black dark:text-white"
                 >Username :
               </label>
               <input
                 type="text"
-                id="text"
+                id="username"
                 v-model="username"
                 class="bg-gray-50 border border-gray-300 text-black text-md rounded-lg focus:ring-secondaryColor focus:border-secondaryColor block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Your Username"
                 required
               />
+            </div>
+            <div class="mb-6">
+              <label
+                for="jenisKelamin"
+                class="block mb-2 text-lg font-bold text-black dark:text-white"
+                >Jenis Kelamin :
+              </label>
+              <select
+                v-model="jenisKelamin"
+                id="jenisKelamin"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              >
+                <option selected>Pilih Jenis Kelamin :</option>
+                <option value="Laki-laki">Laki-laki</option>
+                <option value="Perempuan">Perempuan</option>
+              </select>
             </div>
             <div class="mb-6">
               <label
@@ -148,6 +179,8 @@ const password = ref("");
 const username = ref("");
 const email = ref("");
 const confirm_password = ref("");
+const fullName = ref("");
+const jenisKelamin = ref("");
 
 const togglePassword = () => {
   showPassword.value = !showPassword.value;
@@ -171,6 +204,8 @@ const register = () => {
   params.append("email", email.value);
   params.append("password", password.value);
   params.append("confirmPassword", confirm_password.value);
+  params.append("fullName", fullName.value);
+  params.append("jenisKelamin", jenisKelamin.value);
 
   axios
     .post("https://todo-mongo-api-one.vercel.app/api/auth/register", params, {

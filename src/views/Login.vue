@@ -160,6 +160,7 @@ const login = () => {
         let expiredAt = res.data.user.updatedAt;
         let userName = res.data.user.username;
         let userEmail = res.data.user.email;
+        let jenisKelamin = res.data.user.jenisKelamin;
         let userId = res.data.user._id;
         store.accessToken = accessToken;
         // store.refreshToken = refreshToken;
@@ -168,6 +169,7 @@ const login = () => {
         store.userNameStore = userName;
         store.userEmailStore = userEmail;
         store.userIdStore = userId;
+        store.userJenisKelamin = jenisKelamin;
         Swal.fire({
           icon: "success",
           title: `${res.data.message}`,

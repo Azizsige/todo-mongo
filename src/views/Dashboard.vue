@@ -50,8 +50,16 @@
               >
                 <span class="sr-only">Open user menu</span>
                 <img
+                  v-if="store.userJenisKelamin == 'Laki-laki'"
                   class="w-8 h-8 rounded-full"
                   src="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
+                  alt="user photo"
+                />
+
+                <img
+                  v-else
+                  class="w-8 h-8 rounded-full"
+                  src="https://flowbite.com/docs/images/people/profile-picture-4.jpg"
                   alt="user photo"
                 />
               </button>

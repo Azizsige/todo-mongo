@@ -19,6 +19,7 @@ export const useStore = defineStore("store", {
     userNameStore: null,
     userEmailStore: null,
     userIdStore: null,
+    userJenisKelamin: null,
     // data user
     dataUser: null,
 
@@ -443,6 +444,7 @@ export const useStore = defineStore("store", {
       "expiredAt",
       "userNameStore",
       "userEmailStore",
+      "userJenisKelamin",
       "userIdStore",
       "accessToken",
     ],
