@@ -40,9 +40,9 @@ Aplikasi Todo List adalah sebuah aplikasi sederhana yang memungkinkan pengguna u
   - [ ] Notifikasi Todo
   - [ ] Drag and Drop Todo
 - [x] User Setting ( Update and Delete User )
-  - [x] Update User
-  - [x] Delete User
-  - [x] Refresh Token (JWT)
+  - [ ] Update User
+  - [ ] Delete User
+  - [ ] Refresh Token (JWT)
 - [x] Integrasi dengan MongoDB
 - [x] Deploy ke Vercel
 
