@@ -12,9 +12,9 @@
           <img src="/img/icon.png" alt="" srcset="" />
           <p>Todo Daily</p>
         </div>
-        <div class="mt-5 card-form">
+        <div class="mt-5 card-form text-center">
           <div class="mb-5 form__header">
-            <p class="text-[24px] font-Rowdies">Reset Your Password</p>
+            <p class="text-[24px] text-center font-Rowdies">Form is Expired</p>
           </div>
           <div class="description text-[18px] font-Rosario">
             <p>Link anda sudah kadaluwarsa</p>

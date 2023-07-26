@@ -95,17 +95,16 @@ const resetPassword = (password) => {
 };
 
 onMounted(async () => {
-  await store.verifyToken(token);
-  message.value = await store.message;
-  console.log(message.value);
-
-  if (message.value == "Token expired") {
-    Swal.close();
-    router.push({ name: "ExpiredToken" });
-  } else {
-    Swal.close();
-    router.push({ name: "ResetPassword" });
-  }
+  // await store.verifyToken(token);
+  // message.value = await store.message;
+  // console.log(message.value);
+  // if (message.value == "Token expired") {
+  //   Swal.close();
+  //   router.push({ name: "ExpiredToken" });
+  // } else {
+  //   Swal.close();
+  //   router.push({ name: "ResetPassword" });
+  // }
 });
 
 // decode token url params to get the expiry date

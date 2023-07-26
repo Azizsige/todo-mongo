@@ -50,6 +50,7 @@ const forgetPassword = (email) => {
         router.push("/login");
         // setAuthTokenCookie(accessToken);
       } else {
+        console.log(res.data.message);
         // store.isUserLoggedIn = false;
         // store.userToken = null;
         Swal.fire({
@@ -59,6 +60,7 @@ const forgetPassword = (email) => {
       }
     })
     .catch((error) => {
+      console.log(error.response.data);
       let errorValidation = error.response.data.errors;
       let errorAuth = error.response.data.message;
       console.log(errorValidation);

@@ -51,13 +51,59 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import Swal from "sweetalert2";
+import axios from "axios";
 
 const password = ref("");
 const route = useRoute();
+const router = useRouter();
 const emit = defineEmits(["resetPassword"]);
+const token = route.params.token;
 
 const resetPassword = () => {
-  emit("resetPassword", password.value);
+  Swal.fire({
+    title: "Please Wait...",
+    allowOutsideClick: false,
+    didOpen: () => {
+      Swal.showLoading();
+    },
+  });
+  // axios with urlsearchparams
+  const params = new URLSearchParams();
+
+  params.append("password", password.value);
+
+  axios
+    .post(
+      "https://todo-mongo-api-one.vercel.app/api/auth/reset-password/" + token,
+      params,
+      {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      }
+    )
+    .then((res) => {
+      console.log(res.data.message);
+      Swal.fire({
+        icon: "success",
+        title: `${res.data.message}`,
+        text: "Silahkan login untuk melanjutkan",
+      });
+      router.push("/login");
+    })
+    .catch((error) => {
+      Swal.close();
+      let err = error.response.data.message;
+      console.log(error);
+      Swal.fire({
+        icon: "error",
+        title: `Session sudah berakhir`,
+        text: " Silahkan minta link verifikasi email kembali",
+        allowOutsideClick: false,
+      });
+      router.push("/forgot-password");
+    });
 };
 
 onMounted(() => {

@@ -18,6 +18,28 @@ import Webinar from "../views/Webinar.vue";
 import { useStore } from "./../stores/store.js";
 import axios from "axios";
 
+async function checkToken(token) {
+  try {
+    await axios
+      .get(
+        `https://todo-mongo-api-one.vercel.app/api/auth/verify-token/${token}`
+      )
+      .then((res) => {
+        // console.log(res.data.status);
+        router.push(`/verification-reset-password/${token}/reset-password`);
+        // this.message = res.data.message;
+        // console.log(res.data);
+      })
+      .catch((err) => {
+        router.push(`/verification-reset-password/expired-token`);
+        // this.message = err.response.data.message;
+        // console.log(err.response.data.message);
+      });
+  } catch (error) {
+    console.log(error.response);
+  }
+}
+
 const routes = [
   {
     path: "/",
@@ -90,7 +112,22 @@ const routes = [
     name: "NotFoundPages",
     component: NotFoundPages,
   },
-
+  {
+    path: "/verification-reset-password/:token/reset-password",
+    name: "ResetPassword",
+    component: ResetPassword,
+    meta: {
+      title: "Reset Password | Todo App With Vue 3 and Mongodb",
+    },
+  },
+  {
+    path: "/verification-reset-password/expired-token",
+    name: "ExpiredToken",
+    component: ExpiredToken,
+    meta: {
+      title: "Expired Token | Todo App With Vue 3 and Mongodb",
+    },
+  },
   {
     path: "/verification-reset-password/:token",
     name: "VerificationResetPassword",
@@ -98,25 +135,19 @@ const routes = [
     meta: {
       title: "Verifikasi | Todo App With Vue 3 and Mongodb",
     },
-    children: [
-      {
-        path: "/verification-reset-password/:token/reset-password",
-        name: "ResetPassword",
-        component: ResetPassword,
-        meta: {
-          title: "Reset Password | Todo App With Vue 3 and Mongodb",
-        },
-      },
-      {
-        path: "/verification-reset-password/:token/expired-token",
-        name: "ExpiredToken",
-        component: ExpiredToken,
-        meta: {
-          title: "Expired Token | Todo App With Vue 3 and Mongodb",
-        },
-      },
-    ],
+    beforeEnter: async (to, from) => {
+      const token = to.params.token;
+      const status = await checkToken(token);
+      console.log(status);
+
+      // if (status == true) {
+      //   router.push(`/login`);
+      // } else {
+      //   router.push(`register`);
+      // }
+    },
   },
+
   {
     path: "/:catchAll(.*)",
     name: "NotFound",
