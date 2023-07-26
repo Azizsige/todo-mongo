@@ -23,17 +23,28 @@ Aplikasi Todo List adalah sebuah aplikasi sederhana yang memungkinkan pengguna u
 
 <!-- buatkan checkbox -->
 
-- [x] Autentikasi dan Middleware ( Login dan Register )
-- [x] CRUD Todo
+- [x] Autentikasi dan Middleware
+  - [x] Login
+  - [x] Register
+  - [x] Logout
+  - [x] Reset Password
+- [x] CRUD Todo ( Create, Read, Update, Delete )
+  - [x] Create Todo
+  - [x] Read Todo
+  - [x] Update Todo
+  - [x] Delete Todo
+  - [x] Refresh Token (JWT)
+  - [ ] Filter Todo
+  - [ ] Sorting Todo
+  - [ ] Label Todo
+  - [ ] Notifikasi Todo
+  - [ ] Drag and Drop Todo
+- [x] User Setting ( Update and Delete User )
+  - [x] Update User
+  - [x] Delete User
+  - [x] Refresh Token (JWT)
 - [x] Integrasi dengan MongoDB
-- [x] Logout
 - [x] Deploy ke Vercel
-- [ ] Username Setting
-- [ ] Filter Todo
-- [ ] Sorting Todo
-- [ ] Label Todo
-- [ ] Notifikasi Todo
-- [ ] Drag and Drop Todo
 
 ## Tampilan Aplikasi
 
