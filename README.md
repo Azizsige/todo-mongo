@@ -39,7 +39,7 @@ Aplikasi Todo List adalah sebuah aplikasi sederhana yang memungkinkan pengguna u
   - [ ] Label Todo
   - [ ] Notifikasi Todo
   - [ ] Drag and Drop Todo
-- [x] User Setting ( Update and Delete User )
+- [ ] User Setting ( Update and Delete User )
   - [ ] Update User
   - [ ] Delete User
   - [ ] Refresh Token (JWT)
