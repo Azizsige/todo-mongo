@@ -154,7 +154,6 @@ const login = () => {
     })
     .then((res) => {
       if (res.data.status) {
-        console.log(res.data);
         let accessToken = res.data.accessToken;
         let userName = res.data.user.username;
         let userEmail = res.data.user.email;

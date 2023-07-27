@@ -66,7 +66,6 @@
                       id="jenisKelamin"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     >
-                      <option selected>Pilih Jenis Kelamin :</option>
                       <option value="Laki-laki">Laki-laki</option>
                       <option value="Perempuan">Perempuan</option>
                     </select>
@@ -218,7 +217,7 @@ const username = ref("");
 const email = ref("");
 const confirm_password = ref("");
 const fullName = ref("");
-const jenisKelamin = ref("");
+const jenisKelamin = ref("Laki-laki");
 const nextForm = ref(true);
 
 const nextFormPage = () => {
@@ -257,13 +256,28 @@ const register = () => {
       },
     })
     .then((res) => {
-      console.log(res.data.message);
       Swal.fire({
         icon: "success",
         title: `${res.data.message}`,
         text: "Silahkan login untuk melanjutkan",
       });
-      router.push("/login");
+
+      let accessToken = res.data.accessToken;
+      let userName = res.data.user.username;
+      let userEmail = res.data.user.email;
+      let jenisKelamin = res.data.user.jenisKelamin;
+      let userId = res.data.user._id;
+      let userFullName = res.data.user.fullName;
+
+      store.accessToken = accessToken;
+      store.isUserLoggedIn = true;
+      store.userNameStore = userName;
+      store.userEmailStore = userEmail;
+      store.userIdStore = userId;
+      store.userJenisKelamin = jenisKelamin;
+      store.userFullNameStore = userFullName;
+
+      router.push("/dashboard");
     })
     .catch((error) => {
       Swal.close();

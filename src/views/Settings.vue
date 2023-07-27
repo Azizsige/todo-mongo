@@ -211,6 +211,13 @@
                 >
                   Edit Profile
                 </button>
+                <button
+                  type="button"
+                  @click.prevent="deleteAccount"
+                  class="px-4 py-2 ml-2 text-white bg-red-700 border rounded-lg hover:bg-white hover:text-red-600 hover:border-secondaryColor"
+                >
+                  Delete Account
+                </button>
               </div>
               <div v-else class="flex justify-end">
                 <button
@@ -219,7 +226,7 @@
                     showSaveProfile = !showSaveProfile;
                     isDisabled = !isDisabled;
                   "
-                  class="px-4 py-2 border rounded-lg border-secondaryColor text-secondaryColor hover:bg-secondaryColor hover:text-white"
+                  class="px-4 py-2 text-red-600 border border-red-700 rounded-lg hover:bg-red-700 hover:text-white"
                 >
                   Cancel
                 </button>
@@ -246,9 +253,12 @@ import DashboardNavbar from "./../components/DashboardNavbar.vue";
 import Sidebars from "./../components/Sidebars.vue";
 import { useStore } from "./../stores/store.js";
 import { useProfilesStore } from "./../stores/profiles.js";
-import { ref } from "vue";
+import { useRouter } from "vue-router";
+import { ref, onMounted } from "vue";
+import { initFlowbite } from "flowbite";
 
 const store = useStore();
+const router = useRouter();
 const profilesStore = useProfilesStore();
 const isDisabled = ref(true);
 const showSaveProfile = ref(true);
@@ -270,6 +280,14 @@ const editProfile = () => {
   showSaveProfile.value = !showSaveProfile.value;
   isDisabled.value = !isDisabled.value;
 };
+
+const deleteAccount = () => {
+  profilesStore.deleteProfile(store.userIdStore);
+};
+
+onMounted(async () => {
+  await initFlowbite();
+});
 </script>
 
 <style lang="scss" scoped></style>
