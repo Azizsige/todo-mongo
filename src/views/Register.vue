@@ -19,10 +19,11 @@
 
           <form>
             <div class="overflow-x-hidden wrapper-form">
-              <div class="flex form">
+              <div class="relative z-10 form">
                 <div
+                  :class="nextForm ? 'scale-100' : 'scale-0'"
+                  v-auto-animate
                   class="w-full firstPage"
-                  :class="nextForm ? 'block' : 'hidden'"
                 >
                   <div class="mb-6">
                     <label
@@ -72,8 +73,9 @@
                   </div>
                 </div>
                 <div
-                  class="w-full transition-all lastPage"
-                  :class="!nextForm ? 'block' : 'hidden'"
+                  v-auto-animate
+                  class="absolute top-0 w-full transition-all lastPage"
+                  :class="nextForm ? 'scale-0' : 'scale-100'"
                 >
                   <div class="mb-6">
                     <label
@@ -173,7 +175,7 @@
               </button>
               <button
                 type="submit"
-                @click.prevent="nextFormPage"
+                @click.prevent="register"
                 class="text-white bg-secondaryColor focus:ring-4 focus:outline-none font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center"
               >
                 Register

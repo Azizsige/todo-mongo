@@ -29,6 +29,9 @@ import { library } from "@fortawesome/fontawesome-svg-core";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 library.add(faEye, faEyeSlash);
 
+// Vue Auto Animate
+import { autoAnimatePlugin } from "@formkit/auto-animate/vue";
+
 createApp(App)
   .use(router)
   .use(MotionPlugin)
@@ -39,5 +42,6 @@ createApp(App)
   })
   .use(VueSweetalert2)
   .use(pinia)
+  .use(autoAnimatePlugin)
   .component("font-awesome-icon", FontAwesomeIcon)
   .mount("#app");
