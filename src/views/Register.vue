@@ -18,139 +18,169 @@
           </div>
 
           <form>
-            <div class="wrapper-form flex relative z-10 overflow-x-hidden">
-              <div class="firstPage w-full">
-                <div class="mb-6">
-                  <label
-                    for="fullName"
-                    class="block mb-2 text-lg font-bold text-black dark:text-white"
-                    >Full Name :
-                  </label>
-                  <input
-                    type="text"
-                    id="fullName"
-                    v-model="fullName"
-                    class="bg-gray-50 border border-gray-300 text-black text-md rounded-lg focus:ring-secondaryColor focus:border-secondaryColor block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Your Full Name"
-                    required
-                  />
-                </div>
-                <div class="mb-6">
-                  <label
-                    for="username"
-                    class="block mb-2 text-lg font-bold text-black dark:text-white"
-                    >Username :
-                  </label>
-                  <input
-                    type="text"
-                    id="username"
-                    v-model="username"
-                    class="bg-gray-50 border border-gray-300 text-black text-md rounded-lg focus:ring-secondaryColor focus:border-secondaryColor block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Your Username"
-                    required
-                  />
-                </div>
-                <div class="mb-6">
-                  <label
-                    for="jenisKelamin"
-                    class="block mb-2 text-lg font-bold text-black dark:text-white"
-                    >Jenis Kelamin :
-                  </label>
-                  <select
-                    v-model="jenisKelamin"
-                    id="jenisKelamin"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  >
-                    <option selected>Pilih Jenis Kelamin :</option>
-                    <option value="Laki-laki">Laki-laki</option>
-                    <option value="Perempuan">Perempuan</option>
-                  </select>
-                </div>
-              </div>
-              <div class="lastPage absolute w-full left-[100%] transition-all">
-                <div class="mb-6">
-                  <label
-                    for="email"
-                    class="block mb-2 text-lg font-bold text-gray-900 dark:text-white"
-                    >Email :
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    v-model="email"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-md rounded-lg focus:ring-secondaryColor focus:border-secondaryColor block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Your Email"
-                    required
-                  />
-                </div>
-                <div class="mb-6">
-                  <label
-                    for="password"
-                    class="block mb-2 text-lg font-bold text-gray-900 dark:text-white"
-                    >Password :
-                  </label>
-                  <div class="relative">
+            <div class="overflow-x-hidden wrapper-form">
+              <div class="flex form w-[37.5rem] space-x-5">
+                <div
+                  class="w-full firstPage"
+                  :class="
+                    nextForm
+                      ? 'ml-0 transition-all'
+                      : 'ml-[-38.5rem] transition-all'
+                  "
+                >
+                  <div class="mb-6">
+                    <label
+                      for="fullName"
+                      class="block mb-2 text-lg font-bold text-black dark:text-white"
+                      >Full Name :
+                    </label>
                     <input
-                      :type="showPassword ? 'text' : 'password'"
-                      v-model="password"
-                      id="password"
-                      class="block w-full p-4 pl-4 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-secondaryColor focus:border-secondaryColor"
-                      placeholder="Password"
+                      type="text"
+                      id="fullName"
+                      v-model="fullName"
+                      class="bg-gray-50 border border-gray-300 text-black text-md rounded-lg focus:ring-secondaryColor focus:border-secondaryColor block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder="Your Full Name"
                       required
                     />
-                    <button
-                      @click="togglePassword"
-                      type="button"
-                      class="text-white absolute right-2.5 bottom-2.5 bg-transparent font-medium rounded-lg text-sm px-4 py-2"
+                  </div>
+                  <div class="mb-6">
+                    <label
+                      for="username"
+                      class="block mb-2 text-lg font-bold text-black dark:text-white"
+                      >Username :
+                    </label>
+                    <input
+                      type="text"
+                      id="username"
+                      v-model="username"
+                      class="bg-gray-50 border border-gray-300 text-black text-md rounded-lg focus:ring-secondaryColor focus:border-secondaryColor block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder="Your Username"
+                      required
+                    />
+                  </div>
+                  <div class="mb-6">
+                    <label
+                      for="jenisKelamin"
+                      class="block mb-2 text-lg font-bold text-black dark:text-white"
+                      >Jenis Kelamin :
+                    </label>
+                    <select
+                      v-model="jenisKelamin"
+                      id="jenisKelamin"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     >
-                      <font-awesome-icon
-                        class="text-secondaryColor"
-                        :icon="showPassword ? 'fas fa-eye' : 'fas fa-eye-slash'"
-                      />
-                    </button>
+                      <option selected>Pilih Jenis Kelamin :</option>
+                      <option value="Laki-laki">Laki-laki</option>
+                      <option value="Perempuan">Perempuan</option>
+                    </select>
                   </div>
                 </div>
-                <div class="">
-                  <label
-                    for="confirm_password"
-                    class="block mb-2 text-lg font-bold text-gray-900 dark:text-white"
-                    >Confirm Password :
-                  </label>
-                  <div class="relative">
+                <div class="w-[22.5rem] transition-all lastPage">
+                  <div class="mb-6">
+                    <label
+                      for="email"
+                      class="block mb-2 text-lg font-bold text-gray-900 dark:text-white"
+                      >Email :
+                    </label>
                     <input
-                      :type="showConfirmPassword ? 'text' : 'password'"
-                      v-model="confirm_password"
-                      id="confirm_password"
-                      class="block w-full p-4 pl-4 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-secondaryColor focus:border-secondaryColor"
-                      placeholder="Confirm Your Password"
+                      type="email"
+                      id="email"
+                      v-model="email"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-md rounded-lg focus:ring-secondaryColor focus:border-secondaryColor block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder="Your Email"
                       required
                     />
-                    <button
-                      @click="toggleConfirmPassword"
-                      type="button"
-                      class="text-white absolute right-2.5 bottom-2.5 bg-transparent font-medium rounded-lg text-sm px-4 py-2"
-                    >
-                      <font-awesome-icon
-                        class="text-secondaryColor"
-                        :icon="
-                          showConfirmPassword
-                            ? 'fas fa-eye'
-                            : 'fas fa-eye-slash'
-                        "
+                  </div>
+                  <div class="mb-6">
+                    <label
+                      for="password"
+                      class="block mb-2 text-lg font-bold text-gray-900 dark:text-white"
+                      >Password :
+                    </label>
+                    <div class="relative">
+                      <input
+                        :type="showPassword ? 'text' : 'password'"
+                        v-model="password"
+                        id="password"
+                        class="block w-full p-4 pl-4 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-secondaryColor focus:border-secondaryColor"
+                        placeholder="Password"
+                        required
                       />
-                    </button>
+                      <button
+                        @click="togglePassword"
+                        type="button"
+                        class="text-white absolute right-2.5 bottom-2.5 bg-transparent font-medium rounded-lg text-sm px-4 py-2"
+                      >
+                        <font-awesome-icon
+                          class="text-secondaryColor"
+                          :icon="
+                            showPassword ? 'fas fa-eye' : 'fas fa-eye-slash'
+                          "
+                        />
+                      </button>
+                    </div>
+                  </div>
+                  <div class="">
+                    <label
+                      for="confirm_password"
+                      class="block mb-2 text-lg font-bold text-gray-900 dark:text-white"
+                      >Confirm Password :
+                    </label>
+                    <div class="relative">
+                      <input
+                        :type="showConfirmPassword ? 'text' : 'password'"
+                        v-model="confirm_password"
+                        id="confirm_password"
+                        class="block w-full p-4 pl-4 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-secondaryColor focus:border-secondaryColor"
+                        placeholder="Confirm Your Password"
+                        required
+                      />
+                      <button
+                        @click="toggleConfirmPassword"
+                        type="button"
+                        class="text-white absolute right-2.5 bottom-2.5 bg-transparent font-medium rounded-lg text-sm px-4 py-2"
+                      >
+                        <font-awesome-icon
+                          class="text-secondaryColor"
+                          :icon="
+                            showConfirmPassword
+                              ? 'fas fa-eye'
+                              : 'fas fa-eye-slash'
+                          "
+                        />
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            <button
-              type="submit"
-              @click.prevent="register"
-              class="text-white bg-secondaryColor focus:ring-4 focus:outline-none font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
-            >
-              Register
-            </button>
+            <div v-if="nextForm" class="mt-0 button-footer">
+              <button
+                type="submit"
+                @click.prevent="nextFormPage"
+                class="text-white bg-secondaryColor focus:ring-4 focus:outline-none font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
+              >
+                Next
+              </button>
+            </div>
+
+            <div v-else class="mt-5 button-footer">
+              <button
+                type="submit"
+                @click.prevent="nextForm = !nextForm"
+                class="text-white mb-3 bg-secondaryColor focus:ring-4 focus:outline-none font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
+              >
+                back
+              </button>
+              <button
+                type="submit"
+                @click.prevent="register"
+                class="text-white bg-secondaryColor focus:ring-4 focus:outline-none font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
+              >
+                Register
+              </button>
+            </div>
 
             <div class="mt-5 text-center footer">
               <hr class="mt-10 border-secondaryColor" />
@@ -189,6 +219,11 @@ const email = ref("");
 const confirm_password = ref("");
 const fullName = ref("");
 const jenisKelamin = ref("");
+const nextForm = ref(true);
+
+const nextFormPage = () => {
+  nextForm.value = !nextForm.value;
+};
 
 const togglePassword = () => {
   showPassword.value = !showPassword.value;
