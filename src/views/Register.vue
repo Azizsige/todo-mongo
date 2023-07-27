@@ -19,14 +19,10 @@
 
           <form>
             <div class="overflow-x-hidden wrapper-form">
-              <div class="flex form w-[37.5rem] space-x-5">
+              <div class="flex form">
                 <div
                   class="w-full firstPage"
-                  :class="
-                    nextForm
-                      ? 'ml-0 transition-all'
-                      : 'ml-[-38.5rem] transition-all'
-                  "
+                  :class="nextForm ? 'block' : 'hidden'"
                 >
                   <div class="mb-6">
                     <label
@@ -75,7 +71,10 @@
                     </select>
                   </div>
                 </div>
-                <div class="w-[22.5rem] transition-all lastPage">
+                <div
+                  class="w-full transition-all lastPage"
+                  :class="!nextForm ? 'block' : 'hidden'"
+                >
                   <div class="mb-6">
                     <label
                       for="email"
@@ -159,24 +158,23 @@
               <button
                 type="submit"
                 @click.prevent="nextFormPage"
-                class="text-white bg-secondaryColor focus:ring-4 focus:outline-none font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
+                class="text-white bg-secondaryColor focus:ring-4 focus:outline-none font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center"
               >
                 Next
               </button>
             </div>
-
             <div v-else class="mt-5 button-footer">
               <button
                 type="submit"
                 @click.prevent="nextForm = !nextForm"
-                class="text-white mb-3 bg-secondaryColor focus:ring-4 focus:outline-none font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
+                class="text-white bg-secondaryColor mb-5 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center"
               >
-                back
+                Back
               </button>
               <button
                 type="submit"
-                @click.prevent="register"
-                class="text-white bg-secondaryColor focus:ring-4 focus:outline-none font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
+                @click.prevent="nextFormPage"
+                class="text-white bg-secondaryColor focus:ring-4 focus:outline-none font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center"
               >
                 Register
               </button>
