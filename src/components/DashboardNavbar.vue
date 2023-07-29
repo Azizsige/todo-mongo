@@ -148,7 +148,7 @@ const logout = async () => {
       title: `Logout Berhasil`,
     });
 
-    localstorage.clear();
+    store.$reset();
     router.push("/login");
   } catch (err) {
     console.log(err);

@@ -418,7 +418,7 @@ export const useStore = defineStore("store", {
       } catch (err) {
         console.log(err.response.data);
         this.isRefreshingTokenStatus = err.response.data.status;
-        localstorage.clear();
+        store.$reset();
         if (
           err.response.data.status == "false" &&
           !this.isTokenExpiredAlertShown
