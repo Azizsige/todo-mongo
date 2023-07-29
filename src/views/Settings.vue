@@ -44,11 +44,17 @@
                       class="w-[10rem] h-[10rem] lg:w-[15rem] lg:h-[15rem] rounded-full bg-cover bg-center bg-no-repeat absolute bottom-0 -mb-10 mx-auto text-center shadow flex items-center justify-center"
                     >
                       <img
-                        src="https://cdn.tuk.dev/assets/webapp/forms/form_layouts/form2.jpg"
+                        :src="
+                          store.userJenisKelamin == 'Perempuan'
+                            ? 'https://flowbite.com/docs/images/people/profile-picture-4.jpg'
+                            : 'https://flowbite.com/docs/images/people/profile-picture-5.jpg'
+                        "
                         alt=""
                         class="absolute z-0 h-full w-[15rem] object-cover rounded-full shadow top-0 left-0 bottom-0 right-0"
                       />
-                      <div
+
+                      <!-- Edit Picture -->
+                      <!-- <div
                         class="absolute top-0 bottom-0 left-0 right-0 z-0 bg-black rounded-full opacity-50"
                       ></div>
                       <div
@@ -76,7 +82,8 @@
                           <line x1="16" y1="5" x2="19" y2="8" />
                         </svg>
                         <p class="text-xs text-gray-100">Edit Picture</p>
-                      </div>
+                      </div> -->
+                      <!-- End of Edit Picture -->
                     </div>
                   </div>
                 </div>

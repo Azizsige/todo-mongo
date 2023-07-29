@@ -8,7 +8,7 @@ import Swal from "sweetalert2";
 export const useProfilesStore = defineStore("profilesStore", {
   state: () => ({
     isRefreshingToken: false,
-    isSwalSwhon: false,
+    isSwalShown: false,
     isProfilesUpdated: false,
     isProfilesDeleted: false,
     isTokenExpiredAlertShown: false,
@@ -21,9 +21,10 @@ export const useProfilesStore = defineStore("profilesStore", {
       const store = useStore();
       this.idProfiles = store.userIdStore;
       this.accessToken = store.accessToken;
+
       if (this.isRefreshingToken) return;
 
-      if (!this.isSwalSwhon) {
+      if (!this.isSwalShown) {
         Swal.fire({
           title: "Please Wait...",
           allowOutsideClick: false,
@@ -68,20 +69,21 @@ export const useProfilesStore = defineStore("profilesStore", {
           }
         })
         .catch(async (err) => {
-          if (
-            err.response.data.message ===
-            "Internal Server Error or Token Expired"
-          ) {
+          console.log(err.response);
+          if (err.response.data.message === "Invalid token or token expired") {
             if (!this.isRefreshingToken) {
               await store.refreshToken();
-              this.isRefreshingToken = false;
-              this.isSwalSwhon = false;
+              if (store.isRefreshingTokenStatus === "false") {
+                this.isRefreshingToken = true;
+                this.isSwalShown = true;
+              } else {
+                this.isRefreshingToken = false;
+                this.isSwalShown = false;
+              }
             }
             if (!this.isTokenExpiredAlertShown) {
               this.updateProfile(id, fullName, username, email, jenisKelamin);
             }
-          } else {
-            console.log(err.response);
           }
         });
     },

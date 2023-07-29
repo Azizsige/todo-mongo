@@ -35,6 +35,8 @@ export const useStore = defineStore("store", {
     // data todo for update
     todoTitleStore: null,
     todoDescriptionStore: null,
+
+    isRefreshingTokenStatus: false,
   }),
   getters: {
     async getTodoLength() {
@@ -408,17 +410,20 @@ export const useStore = defineStore("store", {
 
         console.log(response.data);
         if (response.data.status) {
+          this.isRefreshingTokenStatus = response.data.status;
           this.accessToken = response.data.accessToken;
           this.getData();
           console.log(response.data);
         }
       } catch (err) {
         console.log(err.response.data);
+        this.isRefreshingTokenStatus = err.response.data.status;
         if (
           err.response.data.status == "false" &&
           !this.isTokenExpiredAlertShown
         ) {
-          this.isTokenExpiredAlertShown = true; // Set state menjadi true
+          this.isTokenExpiredAlertShown = true;
+          // Set state menjadi true
           Swal.fire({
             icon: "error",
             title: `${err.response.data.message}`,

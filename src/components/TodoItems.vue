@@ -28,6 +28,8 @@ const todoItems = computed(() => store.dataUser);
 const todoLength = ref(null);
 const completedTodoLength = ref(0);
 
+const isLoggedIn = store.isUserLoggedIn;
+
 const renderData = async () => {
   await store.getData();
   renderLength();
@@ -202,7 +204,7 @@ onMounted(async () => {
         <div
           role="status"
           v-if="loading === false"
-          class="w-full animate-pulse flex flex-col space-y-5"
+          class="flex flex-col w-full space-y-5 animate-pulse"
         >
           <div
             class="todo-content bg-gray-200 hover:bg-gray-100 flex flex-col items-start h-32 lg:flex-row lg:items-center justify-between px-5 py-3 border border-[#E3E3E3] rounded-[8px] w-full lg:w-full"
