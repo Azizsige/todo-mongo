@@ -149,6 +149,13 @@ const logout = async () => {
     });
 
     store.isUserLoggedIn = false;
+    store.accessToken = null;
+    store.userIdStore = null;
+    store.userNameStore = null;
+    store.userEmailStore = null;
+    store.userJenisKelamin = null;
+    store.userFullNameStore = null;
+    store.isUserLoggedIn = false;
     router.push("/login");
   } catch (err) {
     console.log(err);
