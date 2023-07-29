@@ -418,13 +418,7 @@ export const useStore = defineStore("store", {
       } catch (err) {
         console.log(err.response.data);
         this.isRefreshingTokenStatus = err.response.data.status;
-        this.accessToken = null;
-        this.userIdStore = null;
-        this.userNameStore = null;
-        this.userEmailStore = null;
-        this.userJenisKelamin = null;
-        this.userFullNameStore = null;
-        this.isUserLoggedIn = false;
+        localstorage.clear();
         if (
           err.response.data.status == "false" &&
           !this.isTokenExpiredAlertShown
