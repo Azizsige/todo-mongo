@@ -1,6 +1,40 @@
 <script setup>
+import { onMounted } from "vue";
+import { initFlowbite } from "flowbite";
+import {
+  initAccordions,
+  initCarousels,
+  initCollapses,
+  initDials,
+  initDismisses,
+  initDrawers,
+  initDropdowns,
+  initModals,
+  initPopovers,
+  initTabs,
+  initTooltips,
+} from "flowbite";
 const props = defineProps({
   sidebars: Array,
+});
+
+onMounted(() => {
+  onMounted(async () => {
+    await initFlowbite();
+    await initAccordions();
+    await initCarousels();
+    await initCollapses();
+    await initDials();
+    await initDismisses();
+    await initDrawers();
+    await initDropdowns();
+    await initModals();
+    await initPopovers();
+    await initTabs();
+    await initTooltips();
+
+    // console.log(todoItems.value);
+  });
 });
 </script>
 

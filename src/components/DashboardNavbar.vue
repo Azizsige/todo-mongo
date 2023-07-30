@@ -148,7 +148,13 @@ const logout = async () => {
       title: `Logout Berhasil`,
     });
 
-    store.$reset();
+    store.isUserLoggedIn = false;
+    store.accessToken = null;
+    store.userEmailStore = null;
+    store.userFullNameStore = null;
+    store.userIdStore = null;
+    store.userJenisKelamin = null;
+    store.userNameStore = null;
     router.push("/login");
   } catch (err) {
     console.log(err);

@@ -2,6 +2,19 @@
 import { useStore } from "./../stores/store.js";
 import { ref, onMounted, computed, watchEffect } from "vue";
 import { initFlowbite } from "flowbite";
+import {
+  initAccordions,
+  initCarousels,
+  initCollapses,
+  initDials,
+  initDismisses,
+  initDrawers,
+  initDropdowns,
+  initModals,
+  initPopovers,
+  initTabs,
+  initTooltips,
+} from "flowbite";
 
 import Swal from "sweetalert2";
 
@@ -112,6 +125,17 @@ watchEffect(() => {
 onMounted(async () => {
   await renderData();
   await initFlowbite();
+  await initAccordions();
+  await initCarousels();
+  await initCollapses();
+  await initDials();
+  await initDismisses();
+  await initDrawers();
+  await initDropdowns();
+  await initModals();
+  await initPopovers();
+  await initTabs();
+  await initTooltips();
   renderLength();
   // console.log(todoItems.value);
 });
